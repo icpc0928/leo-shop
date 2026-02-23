@@ -1,0 +1,227 @@
+{
+  "common": {
+    "shopName": "LEO SHOP",
+    "shopDesc": "Curated lifestyle goods, minimalist design, living with taste.",
+    "currency": "NT$",
+    "free": "Free",
+    "loading": "Loading...",
+    "backToTop": "Back to Top"
+  },
+  "announcement": {
+    "freeShipping": "Free shipping on orders over NT$2,000"
+  },
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "about": "About",
+    "contact": "Contact",
+    "faq": "FAQ"
+  },
+  "hero": {
+    "slides": {
+      "0": {
+        "subtitle": "NEW COLLECTION",
+        "title": "Curated Living",
+        "desc": "Handpicked lifestyle goods to elevate your everyday."
+      },
+      "1": {
+        "subtitle": "HANDCRAFTED",
+        "title": "Artisan Selection",
+        "desc": "Artisan-made goods from around the world, warming your life."
+      },
+      "2": {
+        "subtitle": "SEASONAL PICKS",
+        "title": "Winter Essentials",
+        "desc": "Limited winter selections, bringing warmth and beauty to cold days."
+      }
+    },
+    "shopNow": "SHOP NOW"
+  },
+  "featured": {
+    "title": "Featured Products",
+    "subtitle": "Curated picks for you"
+  },
+  "categories": {
+    "title": "Shop by Category",
+    "subtitle": "Browse our collections",
+    "homeDecor": "Home Decor",
+    "accessories": "Accessories",
+    "lifestyle": "Lifestyle"
+  },
+  "newsletter": {
+    "title": "Newsletter",
+    "desc": "Subscribe to get the latest products and exclusive offers.",
+    "placeholder": "Your email address",
+    "subscribe": "Subscribe"
+  },
+  "product": {
+    "addToCart": "Add to Cart",
+    "quickView": "Quick View",
+    "sale": "SALE",
+    "quantity": "Quantity",
+    "inStock": "{count} in stock",
+    "description": "Description",
+    "specifications": "Specifications",
+    "reviews": "Reviews",
+    "reviewsComingSoon": "Reviews coming soon.",
+    "relatedProducts": "You May Also Like",
+    "allProducts": "All Products",
+    "noProducts": "No products found.",
+    "sortDefault": "Default",
+    "sortPriceAsc": "Price: Low to High",
+    "sortPriceDesc": "Price: High to Low",
+    "sortName": "Name",
+    "categoriesLabel": "CATEGORIES",
+    "filters": "FILTERS"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your Cart is Empty",
+    "emptyDesc": "Looks like you haven't added anything yet.",
+    "continueShopping": "Continue Shopping",
+    "clearCart": "Clear Cart",
+    "product": "PRODUCT",
+    "price": "PRICE",
+    "quantityLabel": "QUANTITY",
+    "subtotalLabel": "SUBTOTAL",
+    "orderSummary": "ORDER SUMMARY",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "freeShippingNote": "Free shipping on orders over NT$2,000",
+    "total": "Total",
+    "checkout": "Checkout",
+    "proceedToCheckout": "Proceed to Checkout"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "step1": "Shipping Info",
+    "step2": "Payment",
+    "step3": "Confirm",
+    "shippingInfo": "Shipping Information",
+    "name": "Full Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "city": "City",
+    "district": "District",
+    "zipCode": "Zip Code",
+    "next": "Next Step",
+    "prev": "Previous",
+    "paymentMethod": "Payment Method",
+    "creditCard": "Credit Card",
+    "atm": "ATM Transfer",
+    "convenience": "Convenience Store Payment",
+    "creditCardNote": "Secure payment via Visa / Mastercard / JCB",
+    "atmNote": "Transfer within 24 hours after placing order",
+    "convenienceNote": "Pay at 7-11, FamilyMart, or Hi-Life",
+    "orderConfirmation": "Order Confirmation",
+    "orderItems": "Order Items",
+    "placeOrder": "Place Order",
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email",
+    "invalidPhone": "Please enter a valid phone number",
+    "orderComplete": "Order Complete!",
+    "thankYou": "Thank you for your purchase!",
+    "orderNumber": "Order Number",
+    "orderConfirmEmail": "A confirmation email has been sent to your email address.",
+    "backToHome": "Back to Home",
+    "orderSummary": "Order Summary"
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "The story of Leo Shop",
+    "ourStory": "Our Story",
+    "story1": "Leo Shop was founded in 2024, born from a pursuit of the good life. We believe every item you use daily should be delightful — not just functional, but meaningful.",
+    "story2": "Starting from a small curated shop, we traveled the world, collaborating with independent designers and artisan craftspeople, carefully selecting every product. We don't chase quantity — only quality. Every item on our shelves is personally tested and genuinely recommended.",
+    "story3": "Thank you for choosing Leo Shop. Let's discover beauty in everyday life together.",
+    "ourValues": "Our Values",
+    "values": {
+      "curated": { "title": "Curated Selection", "desc": "Every product goes through careful screening to ensure both quality and design." },
+      "sustainable": { "title": "Sustainability", "desc": "We prioritize natural, eco-friendly materials to reduce environmental impact." },
+      "craftsmanship": { "title": "Craftsmanship", "desc": "Collaborating with artisans worldwide to preserve the warmth of handmade goods." },
+      "community": { "title": "Community", "desc": "Supporting local brands and small studios to build a better life together." }
+    },
+    "ourTeam": "Our Team"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "getInTouch": "GET IN TOUCH",
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Your message...",
+    "send": "Send Message",
+    "thankYou": "Thank you! 🎉",
+    "replyNote": "We'll get back to you soon.",
+    "address": "Address",
+    "phone": "Phone",
+    "emailLabel": "Email",
+    "hours": "Hours"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Have a question? Check our FAQ below"
+  },
+  "footer": {
+    "quickLinks": "QUICK LINKS",
+    "contactTitle": "CONTACT",
+    "payment": "PAYMENT METHODS",
+    "copyright": "© {year} Leo Shop. All rights reserved."
+  },
+  "breadcrumb": {
+    "home": "Home"
+  },
+  "account": {
+    "login": "Sign In",
+    "register": "Sign Up",
+    "logout": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "name": "Name",
+    "phone": "Phone",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "registerNow": "Sign up now",
+    "hasAccount": "Already have an account?",
+    "loginNow": "Sign in now",
+    "agreeTerms": "I agree to the Terms of Service and Privacy Policy",
+    "loggingIn": "Signing in...",
+    "registering": "Signing up...",
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email",
+    "passwordMismatch": "Passwords do not match",
+    "mustAgreeTerms": "You must agree to the terms",
+    "welcome": "Hello, {name}!",
+    "accountDesc": "Manage your account, orders, and settings here.",
+    "center": "Account",
+    "myOrders": "My Orders",
+    "myOrdersDesc": "View order status and history",
+    "profile": "Profile",
+    "profileDesc": "Edit your personal information and password",
+    "addresses": "Addresses",
+    "addressesDesc": "Manage your shipping addresses",
+    "logoutDesc": "Sign out of your account",
+    "backToAccount": "Back to Account",
+    "changePassword": "Change Password",
+    "oldPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "save": "Save",
+    "saving": "Saving...",
+    "saved": "Saved ✓",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "addAddress": "Add Address",
+    "editAddress": "Edit Address",
+    "addressLabel": "Address",
+    "defaultAddress": "Default",
+    "setDefault": "Set as default",
+    "orderStatus": {
+      "processing": "Processing",
+      "shipped": "Shipped",
+      "completed": "Completed"
+    }
+  }
+}

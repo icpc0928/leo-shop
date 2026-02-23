@@ -1,0 +1,186 @@
+# Leo Shop — 進度追蹤
+
+## 當前階段：Phase 1 - 前端骨架 ✅ → Phase 1.5 進行中
+
+### Phase 0 - 規劃 ✅
+- [x] 專案方向確認（Next.js + Spring Boot 自建）
+- [x] 技術棧選定
+- [x] 架構設計文件
+- [x] Skill 文件建立
+- [x] LeArts 主題分析（視覺參考用）
+
+### Phase 1 - 前端骨架 ✅
+- [x] Next.js 專案初始化
+- [x] Tailwind CSS 設定
+- [x] 基本路由建立（首頁/商品/購物車/關於/聯絡/FAQ）
+- [x] Header + Footer 組件
+- [x] 首頁（HeroBanner Swiper 輪播 + 精選商品 + Newsletter）
+- [x] 商品列表頁（篩選、排序）
+- [x] 商品詳情頁（圖片輪播、Tabs、相關商品）
+- [x] 購物車頁面（Zustand + localStorage 持久化）
+- [x] 關於/聯絡/FAQ 頁面
+- [x] Mock Data（10 個商品、3 個分類）
+- [x] 安裝 zustand / swiper / lucide-react
+
+### Phase 1.5 - 前端完善 ✅
+- [x] 中英雙語（next-intl）
+  - next-intl 安裝與設定（NextIntlClientProvider）
+  - 翻譯檔：`src/i18n/en.json`、`src/i18n/zh-TW.json`
+  - i18n 設定：`src/i18n/config.ts`、`src/i18n/request.ts`
+  - 語言切換按鈕（Header，zustand persist）
+  - 所有組件硬編碼文字改用 `useTranslations()`
+  - 語言狀態管理：`src/stores/localeStore.ts`
+  - IntlProvider 包裝：`src/components/providers/IntlProvider.tsx`
+- [x] 視覺調整（對照 LeArts 精修細節）
+  - Announcement bar（公告欄）
+  - Playfair Display 字體（標題 serif）
+  - 導航底線動畫（nav-link::after）
+  - HeroBanner 漸層 overlay
+  - FeaturedProducts 裝飾線（section-line）
+  - Shop by Category 區塊：`src/components/home/ShopByCategory.tsx`
+  - 商品卡片 Quick View overlay + 星星評分 + SALE badge
+  - globals.css 統一按鈕樣式、scroll-behavior smooth
+  - Footer payment icons + Back to Top 按鈕
+- [x] 結帳頁面（收件資訊 + 付款方式選擇）
+  - `src/app/checkout/page.tsx`
+  - 3 步驟流程：收件資訊 → 付款方式 → 訂單確認
+  - 側邊欄訂單摘要
+  - 表單驗證（必填、Email、電話格式）
+  - 訂單完成感謝頁面
+
+### Phase 2 - 會員系統 ✅
+- [x] Auth Store（Zustand + localStorage persist）
+- [x] 登入頁面（表單驗證、記住我、忘記密碼連結）
+- [x] 註冊頁面（表單驗證、同意條款、密碼一致性檢查）
+- [x] 會員中心主頁（功能卡片、未登入重導）
+- [x] 個人資料頁面（編輯姓名/Email/電話、變更密碼）
+- [x] 訂單記錄頁面（mock 訂單、展開明細）
+- [x] 收件地址管理（新增/編輯/刪除/設預設）
+- [x] Header 用戶圖示 + dropdown 選單
+- [x] 中英翻譯更新（account 相關）
+- [x] Types 更新（User/Order/OrderItem/Address）
+
+### Phase 3 - 後台 API（進行中）
+- [x] Spring Boot 專案初始化（~/IdeaProjects/leo-shop-api/）
+- [x] H2 Database + JPA 設定
+- [x] Security 設定（開發階段全開放）
+- [x] CORS 設定（localhost:3000）
+- [x] Health Check API（GET /api/health）
+- [x] Product Entity + Repository
+- [x] 商品 CRUD API
+- [x] 訂單 API
+- [x] 會員 API（註冊、登入、JWT）
+- [x] User Entity + Repository
+- [x] Address Entity + Repository
+- [x] JWT 認證（JwtUtil + JwtAuthFilter）
+- [x] AuthController（POST /api/auth/register, /api/auth/login）
+- [x] UserController（GET/PUT /api/user/profile, PUT /api/user/password）
+- [x] DataInitializer（admin@leoshop.com 預設帳號）
+- [x] 庫存管理
+- [x] 地址 CRUD API
+- [x] Admin Dashboard 統計 API
+- [x] 全域異常處理（GlobalExceptionHandler）
+- [x] SecurityConfig 更新（角色權限控制）
+- [x] DataInitializer 更新（mock 商品 + 用戶）
+- [x] API 文件（~/IdeaProjects/leo-shop-api/docs/API.md）
+- [x] 前後端串接
+  - API Client（src/lib/api.ts）— fetchAPI wrapper + Token 管理 + 所有 API 模組
+  - .env.local（NEXT_PUBLIC_API_URL）
+  - Types 更新（id: number | string，role: string，Order status 大寫，PaginatedResponse）
+  - authStore 改寫（串接 authAPI + userAPI，JWT token 存 localStorage）
+  - cartStore 更新（支援 number | string id）
+  - 首頁 FeaturedProducts 串接 productAPI
+  - 商品列表頁串接 productAPI（篩選/分類/排序/分頁）
+  - 商品詳情頁串接 productAPI.getBySlug
+  - 登入/註冊頁串接 authStore（含錯誤顯示）
+  - 個人資料頁串接 userAPI（含密碼變更）
+  - 訂單頁串接 orderAPI.getMyOrders
+  - 地址頁串接 addressAPI CRUD
+  - 結帳頁串接 orderAPI.create
+  - Admin Dashboard 串接 adminDashboardAPI
+  - Admin 商品管理串接 adminProductAPI CRUD
+  - Admin 訂單管理串接 adminOrderAPI + updateStatus
+  - Admin 會員管理保留 mock data（後端無 user list API）
+  - Admin layout 權限判斷支援大寫 ADMIN
+  - 所有頁面含 loading 狀態 + try/catch + fallback to mock data
+
+### Phase 4 - 管理後台 ✅
+- [x] 安裝 shadcn/ui + 相關套件（recharts）
+- [x] Admin Layout（側邊欄導航 + 頂部欄 + 手機版 Sheet）
+- [x] Admin Dashboard（數據統計：營收、訂單數、商品數、會員數 + 營收趨勢圖 + 最近訂單）
+- [x] 商品管理介面（CRUD 表格、新增/編輯表單、搜尋、刪除確認）
+- [x] 訂單管理介面（訂單列表、狀態篩選 Tabs、展開詳情、狀態更新）
+- [x] 會員管理介面（會員列表、搜尋、停用/啟用、會員詳情 Dialog）
+- [x] Admin 權限控制（僅 ADMIN role 可進入，admin@leoshop.com mock）
+- [x] Mock Data（adminMockData.ts：統計、圖表、訂單、用戶）
+
+### Phase 4.5 - DaisyUI 主題系統整合 ✅
+- [x] 安裝 DaisyUI v5
+- [x] globals.css 加入 `@plugin "daisyui"` + `@import "daisyui/themes"`
+- [x] 主題切換 Store（`src/stores/themeStore.ts`，Zustand + persist，17 個主題）
+- [x] 主題切換組件（`src/components/ui/ThemeSwitcher.tsx`，dropdown + 色票預覽）
+- [x] ThemeProvider（`src/components/providers/ThemeProvider.tsx`，useEffect 設定 data-theme）
+- [x] layout.tsx 更新（suppressHydrationWarning，ThemeProvider）
+- [x] Header.tsx 改用 DaisyUI（navbar, btn, badge, dropdown）
+- [x] Footer.tsx 改用 DaisyUI（footer, badge, link, btn）
+- [x] ProductCard.tsx 改用 DaisyUI（card, badge, btn, rating）
+- [x] HeroBanner.tsx 改用 DaisyUI（hero, hero-overlay, hero-content, btn）
+- [x] Newsletter.tsx 改用 DaisyUI（input, btn, join）
+- [x] FeaturedProducts.tsx 改用 DaisyUI（divider）
+- [x] 購物車頁面改用 DaisyUI（table, btn, join, card, divider）
+- [x] 登入/註冊頁面改用 DaisyUI（card, input, checkbox, btn, form-control, label）
+- [x] FAQ 頁面改用 DaisyUI（collapse + collapse-arrow，radio accordion）
+- [x] 結帳頁面改用 DaisyUI（steps, input, radio, btn, card, divider）
+- [x] Admin layout sidebar 改用 DaisyUI（menu, navbar, btn, loading）
+- [x] Admin Dashboard 改用 DaisyUI（stat, table, badge, card）
+- [x] Admin 商品管理改用 DaisyUI（table, badge, btn, input, textarea, checkbox）+ shadcn Dialog
+- [x] Admin 訂單管理改用 DaisyUI（tabs, table, badge, btn, divider）
+- [x] Admin 會員管理改用 DaisyUI（table, badge, btn, input）+ shadcn Dialog
+- [x] 主題預覽頁面（`src/app/themes/page.tsx`，17 主題色票展示 + 點擊切換）
+- [x] `npm run build` 通過
+
+### Phase 5 - 錢包與金流（待做）
+
+#### 5.1 錢包系統
+- [ ] Wallet Entity（userId, balance, currency=USD）
+- [ ] Transaction Entity（type: TOPUP/PURCHASE/REFUND, amount, status, reference）
+- [ ] 錢包 API（查餘額、交易紀錄）
+- [ ] 前端：會員中心「我的錢包」頁面
+- [ ] 前端：交易紀錄頁面
+
+#### 5.2 儲值功能
+- [ ] 儲值 API（產生付款請求）
+- [ ] 虛擬貨幣儲值（NOWPayments API 串接）
+  - 支援 BTC / ETH / USDT / USDC
+  - 自動匯率轉換為 USD
+  - Webhook 接收到帳通知，自動入帳
+- [ ] 傳統方式儲值（Stripe / 綠界 / 藍新）
+- [ ] 前端：儲值流程頁面（選金額 → 選付款方式 → 付款）
+
+#### 5.3 結帳整合
+- [ ] 結帳支援「使用錢包餘額」扣款
+- [ ] 餘額不足時可混合付款（餘額 + 其他方式）
+- [ ] 直接用虛擬幣付款（不經過錢包）
+- [ ] 前端：結帳頁面加入餘額選項
+
+#### 5.4 部署與上線
+- [ ] 部署設定
+- [ ] 正式上線
+
+---
+
+## 決策記錄
+
+| 日期 | 決策 | 原因 |
+|------|------|------|
+| 2026-02-11 | 選擇 Next.js + 自建後台 | Leo 希望完全掌控，不想被 Shopify 綁定 |
+| 2026-02-11 | 後台用 Java/Spring Boot | Leo 的主力語言 |
+| 2026-02-11 | 前端用 Tailwind CSS | 簡約風格首選，開發速度快 |
+| 2026-02-11 | LeArts 作為視覺參考 | 已購買授權，參考設計但重寫程式碼 |
+| 2026-02-11 | 後台專案放 ~/IdeaProjects/ | Leo 習慣 WebStorm 前端、IntelliJ IDEA 後端 |
+| 2026-02-11 | 支付需支援虛擬貨幣 | Leo 希望除了傳統金流外，也能用 BTC/ETH/USDT 等加密貨幣支付 |
+| 2026-02-11 | 管理後台用 shadcn/ui | 輕量、Tailwind 統一風格、現成 Table/Form/Chart 組件 |
+| 2026-02-11 | 價格用 USD 計價 | 統一貨幣，虛擬幣自動轉換 USD |
+| 2026-02-11 | 虛擬幣串接用 NOWPayments | 支援 200+ 幣種、API 簡單、手續費 0.5%、免 KYC |
+| 2026-02-11 | 加入錢包儲值系統 | 用戶可儲值後用餘額消費，支援虛擬幣 + 傳統方式儲值 |
+| 2026-02-11 | 主題從「溫暖簡約」切換為「自然清新」 | 色系從金棕色 #c8956c 改為綠色系 #22c55e，字體從 Playfair Display+Inter 改為 Lora+Nunito，整體風格更清新自然 |

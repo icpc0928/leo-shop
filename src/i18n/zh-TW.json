@@ -1,0 +1,227 @@
+{
+  "common": {
+    "shopName": "LEO SHOP",
+    "shopDesc": "精選生活好物，簡約設計，品味生活。",
+    "currency": "NT$",
+    "free": "免運",
+    "loading": "載入中...",
+    "backToTop": "回到頂部"
+  },
+  "announcement": {
+    "freeShipping": "滿 NT$2,000 免運費"
+  },
+  "nav": {
+    "home": "首頁",
+    "products": "商品",
+    "about": "關於",
+    "contact": "聯絡",
+    "faq": "常見問題"
+  },
+  "hero": {
+    "slides": {
+      "0": {
+        "subtitle": "全新系列",
+        "title": "品味生活",
+        "desc": "精心挑選的生活好物，為你的日常增添質感。"
+      },
+      "1": {
+        "subtitle": "匠心手作",
+        "title": "職人精選",
+        "desc": "來自世界各地工匠的手作精品，溫暖你的生活。"
+      },
+      "2": {
+        "subtitle": "季節推薦",
+        "title": "冬日必備",
+        "desc": "冬季限定選物，為寒冷的日子帶來溫暖與美好。"
+      }
+    },
+    "shopNow": "立即選購"
+  },
+  "featured": {
+    "title": "精選商品",
+    "subtitle": "為你推薦的好物"
+  },
+  "categories": {
+    "title": "依分類瀏覽",
+    "subtitle": "探索我們的系列",
+    "homeDecor": "居家裝飾",
+    "accessories": "配件",
+    "lifestyle": "生活風格"
+  },
+  "newsletter": {
+    "title": "電子報",
+    "desc": "訂閱電子報，搶先獲得新品與優惠資訊。",
+    "placeholder": "請輸入 Email 地址",
+    "subscribe": "訂閱"
+  },
+  "product": {
+    "addToCart": "加入購物車",
+    "quickView": "快速瀏覽",
+    "sale": "特價",
+    "quantity": "數量",
+    "inStock": "庫存 {count} 件",
+    "description": "商品描述",
+    "specifications": "商品規格",
+    "reviews": "評價",
+    "reviewsComingSoon": "評價功能即將推出。",
+    "relatedProducts": "你可能也喜歡",
+    "allProducts": "所有商品",
+    "noProducts": "找不到商品。",
+    "sortDefault": "預設排序",
+    "sortPriceAsc": "價格：低到高",
+    "sortPriceDesc": "價格：高到低",
+    "sortName": "名稱",
+    "categoriesLabel": "商品分類",
+    "filters": "篩選"
+  },
+  "cart": {
+    "title": "購物車",
+    "empty": "購物車是空的",
+    "emptyDesc": "看起來你還沒有加入任何商品。",
+    "continueShopping": "繼續購物",
+    "clearCart": "清空購物車",
+    "product": "商品",
+    "price": "價格",
+    "quantityLabel": "數量",
+    "subtotalLabel": "小計",
+    "orderSummary": "訂單摘要",
+    "subtotal": "商品小計",
+    "shipping": "運費",
+    "freeShippingNote": "滿 NT$2,000 享免運",
+    "total": "合計",
+    "checkout": "結帳",
+    "proceedToCheckout": "前往結帳"
+  },
+  "checkout": {
+    "title": "結帳",
+    "step1": "收件資訊",
+    "step2": "付款方式",
+    "step3": "確認訂單",
+    "shippingInfo": "收件資訊",
+    "name": "姓名",
+    "email": "電子信箱",
+    "phone": "聯絡電話",
+    "address": "地址",
+    "city": "縣市",
+    "district": "鄉鎮區",
+    "zipCode": "郵遞區號",
+    "next": "下一步",
+    "prev": "上一步",
+    "paymentMethod": "付款方式",
+    "creditCard": "信用卡",
+    "atm": "ATM 轉帳",
+    "convenience": "超商付款",
+    "creditCardNote": "支援 Visa / Mastercard / JCB 安全付款",
+    "atmNote": "下單後 24 小時內完成轉帳",
+    "convenienceNote": "至 7-11、全家、萊爾富繳款",
+    "orderConfirmation": "確認訂單",
+    "orderItems": "訂單商品",
+    "placeOrder": "送出訂單",
+    "required": "此欄位為必填",
+    "invalidEmail": "請輸入有效的電子信箱",
+    "invalidPhone": "請輸入有效的聯絡電話",
+    "orderComplete": "訂單完成！",
+    "thankYou": "感謝您的訂購！",
+    "orderNumber": "訂單編號",
+    "orderConfirmEmail": "訂單確認信已寄送至您的電子信箱。",
+    "backToHome": "回到首頁",
+    "orderSummary": "訂單摘要"
+  },
+  "about": {
+    "title": "關於我們",
+    "subtitle": "認識 Leo Shop 的故事",
+    "ourStory": "我們的故事",
+    "story1": "Leo Shop 創立於 2024 年，源自對美好生活的追求。我們相信，日常使用的每一件物品都應該是令人愉悅的——不僅實用，更要有溫度。",
+    "story2": "從一間小小的選物店開始，我們走訪世界各地，與獨立設計師和手作工匠合作，精心挑選每一件商品。我們不追求數量，只在乎品質。每一件上架的商品，都是我們親自體驗、反覆確認後的真心推薦。",
+    "story3": "感謝您選擇 Leo Shop，讓我們一起在日常中發現美好。",
+    "ourValues": "我們的理念",
+    "values": {
+      "curated": { "title": "用心選品", "desc": "每一件商品都經過層層篩選，確保品質與設計兼具，只為帶給您最好的。" },
+      "sustainable": { "title": "永續環保", "desc": "我們優先選用天然、環保的材質，致力於減少對環境的影響。" },
+      "craftsmanship": { "title": "匠心工藝", "desc": "與世界各地工匠合作，傳承手作的溫度與獨特性。" },
+      "community": { "title": "社區連結", "desc": "支持在地品牌與小型工作室，共同建立一個更美好的生活圈。" }
+    },
+    "ourTeam": "我們的團隊"
+  },
+  "contact": {
+    "title": "聯絡我們",
+    "getInTouch": "與我們聯繫",
+    "name": "姓名",
+    "email": "電子信箱",
+    "subject": "主旨",
+    "message": "您的訊息...",
+    "send": "送出訊息",
+    "thankYou": "感謝您！🎉",
+    "replyNote": "我們會盡快回覆您。",
+    "address": "地址",
+    "phone": "電話",
+    "emailLabel": "信箱",
+    "hours": "營業時間"
+  },
+  "faq": {
+    "title": "常見問題",
+    "subtitle": "有任何疑問嗎？請參考以下問答"
+  },
+  "footer": {
+    "quickLinks": "快速連結",
+    "contactTitle": "聯絡資訊",
+    "payment": "付款方式",
+    "copyright": "© {year} Leo Shop. All rights reserved."
+  },
+  "breadcrumb": {
+    "home": "首頁"
+  },
+  "account": {
+    "login": "登入",
+    "register": "註冊",
+    "logout": "登出",
+    "email": "電子信箱",
+    "password": "密碼",
+    "confirmPassword": "確認密碼",
+    "name": "姓名",
+    "phone": "電話",
+    "rememberMe": "記住我",
+    "forgotPassword": "忘記密碼？",
+    "noAccount": "還沒有帳號？",
+    "registerNow": "立即註冊",
+    "hasAccount": "已有帳號？",
+    "loginNow": "立即登入",
+    "agreeTerms": "我同意服務條款與隱私政策",
+    "loggingIn": "登入中...",
+    "registering": "註冊中...",
+    "required": "此欄位為必填",
+    "invalidEmail": "請輸入有效的電子信箱",
+    "passwordMismatch": "密碼不一致",
+    "mustAgreeTerms": "請同意服務條款",
+    "welcome": "你好，{name}！",
+    "accountDesc": "在這裡管理你的帳號、訂單與設定。",
+    "center": "會員中心",
+    "myOrders": "我的訂單",
+    "myOrdersDesc": "查看訂單狀態與歷史記錄",
+    "profile": "個人資料",
+    "profileDesc": "編輯個人資訊與密碼",
+    "addresses": "收件地址",
+    "addressesDesc": "管理你的收件地址",
+    "logoutDesc": "登出目前的帳號",
+    "backToAccount": "返回會員中心",
+    "changePassword": "變更密碼",
+    "oldPassword": "舊密碼",
+    "newPassword": "新密碼",
+    "confirmNewPassword": "確認新密碼",
+    "save": "儲存",
+    "saving": "儲存中...",
+    "saved": "已儲存 ✓",
+    "cancel": "取消",
+    "edit": "編輯",
+    "addAddress": "新增地址",
+    "editAddress": "編輯地址",
+    "addressLabel": "地址",
+    "defaultAddress": "預設",
+    "setDefault": "設為預設",
+    "orderStatus": {
+      "processing": "處理中",
+      "shipped": "已出貨",
+      "completed": "已完成"
+    }
+  }
+}
