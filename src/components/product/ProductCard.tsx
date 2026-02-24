@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Product } from "@/types";
 import { formatPrice } from "@/lib/utils";
 import { useCartStore } from "@/stores/cartStore";
-import { ShoppingBag, Eye } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 interface ProductCardProps {
@@ -16,66 +16,63 @@ export default function ProductCard({ product }: ProductCardProps) {
   const addItem = useCartStore((s) => s.addItem);
   const t = useTranslations("product");
 
+  const discount =
+    product.comparePrice && product.comparePrice > product.price
+      ? Math.round((1 - product.price / product.comparePrice) * 100)
+      : 0;
+
   return (
-    <div className="card bg-base-100 shadow-sm hover:shadow-md transition-shadow group">
-      <figure className="relative aspect-square overflow-hidden">
-        <Link href={`/products/${product.slug}`} className="block w-full h-full">
-          <Image
-            src={product.images[0]}
-            alt={product.name}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          />
-          {product.comparePrice && (
-            <span className="badge badge-primary absolute top-3 left-3 text-xs">
-              {t("sale")}
+    <div className="group relative">
+      {/* Image */}
+      <Link href={`/products/${product.slug}`} className="block">
+        <div className="relative aspect-[3/4] overflow-hidden bg-[#f5f0eb]">
+          {product.images[0] && (
+            <Image
+              src={product.images[0]}
+              alt={product.name}
+              fill
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            />
+          )}
+          {discount > 0 && (
+            <span className="absolute top-3 right-3 bg-[#c8956c] text-white text-[10px] font-medium tracking-wide px-2 py-1 rounded-sm">
+              -{discount}%
             </span>
           )}
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
-            <span className="btn btn-sm bg-base-100 text-base-content opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-[opacity,transform] duration-300">
-              <Eye className="w-4 h-4" aria-hidden="true" />
-              {t("quickView")}
-            </span>
-          </div>
-        </Link>
-      </figure>
+        </div>
+      </Link>
 
-      <div className="card-body items-center text-center p-4">
+      {/* Info */}
+      <div className="pt-3 pb-1">
         <Link href={`/products/${product.slug}`}>
-          <h3 className="card-title text-sm tracking-wider hover:text-primary transition-colors min-w-0 truncate">
+          <h3 className="text-sm tracking-wide text-base-content/80 hover:text-[#c8956c] transition-colors truncate">
             {product.name}
           </h3>
         </Link>
 
-        {/* Rating */}
-        <div className="rating rating-sm rating-half">
-          {[...Array(5)].map((_, i) => (
-            <input
-              key={i}
-              type="radio"
-              name={`rating-${product.id}`}
-              aria-label={`${i + 1} star`}
-              className={`mask mask-star-2 ${i < Math.floor(product.rating) ? "bg-warning" : "bg-base-300"}`}
-              disabled
-              checked={i === Math.floor(product.rating) - 1}
-              readOnly
-            />
-          ))}
-          <span className="text-xs text-base-content/60 ml-1">{product.rating}</span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium">{formatPrice(product.price)}</span>
-          {product.comparePrice && (
-            <span className="text-sm text-base-content/40 line-through">
+        <div className="flex items-center gap-2 mt-1">
+          <span className="text-sm font-medium text-base-content">
+            {formatPrice(product.price)}
+          </span>
+          {product.comparePrice && product.comparePrice > product.price && (
+            <span className="text-xs text-base-content/40 line-through">
               {formatPrice(product.comparePrice)}
             </span>
           )}
         </div>
+      </div>
 
-        <button className="btn btn-outline btn-primary btn-sm mt-1" onClick={() => addItem(product)}>
-          <ShoppingBag className="w-4 h-4" aria-hidden="true" />
+      {/* Add to cart - appears on hover */}
+      <div className="absolute bottom-[4.5rem] left-0 right-0 px-3 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
+        <button
+          className="btn btn-sm w-full bg-white/90 backdrop-blur-sm border border-base-300 text-base-content hover:bg-[#c8956c] hover:text-white hover:border-[#c8956c] text-xs tracking-wider"
+          onClick={(e) => {
+            e.preventDefault();
+            addItem(product);
+          }}
+        >
+          <ShoppingBag className="w-3.5 h-3.5" aria-hidden="true" />
           {t("addToCart")}
         </button>
       </div>

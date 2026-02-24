@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+import LayoutWrapper from "@/components/layout/LayoutWrapper";
 import IntlProvider from "@/components/providers/IntlProvider";
 import ThemeProvider from "@/components/providers/ThemeProvider";
 import "./globals.css";
@@ -36,9 +35,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
         <ThemeProvider />
         <IntlProvider>
-          <Header />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
+          <LayoutWrapper>{children}</LayoutWrapper>
         </IntlProvider>
       </body>
     </html>

@@ -94,11 +94,11 @@ export const addressAPI = {
 export const adminProductAPI = {
   create: (data: {
     name: string; slug: string; description: string; price: number;
-    comparePrice?: number; imageUrl: string; category: string; stock: number; active: boolean;
+    comparePrice?: number; imageUrl: string; imageUrls?: string[]; category: string; stock: number; active: boolean;
   }) => fetchAPI('/api/admin/products', { method: 'POST', body: JSON.stringify(data) }),
   update: (id: number, data: {
     name: string; slug: string; description: string; price: number;
-    comparePrice?: number; imageUrl: string; category: string; stock: number; active: boolean;
+    comparePrice?: number; imageUrl: string; imageUrls?: string[]; category: string; stock: number; active: boolean;
   }) => fetchAPI(`/api/admin/products/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   delete: (id: number) => fetchAPI(`/api/admin/products/${id}`, { method: 'DELETE' }),
 };
@@ -114,6 +114,25 @@ export const adminOrderAPI = {
   getById: (id: number) => fetchAPI(`/api/admin/orders/${id}`),
   updateStatus: (id: number, status: string) =>
     fetchAPI(`/api/admin/orders/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }) }),
+};
+
+// Upload API
+export const uploadAPI = {
+  uploadImages: async (files: File[]): Promise<{ urls: string[] }> => {
+    const formData = new FormData();
+    files.forEach(f => formData.append('files', f));
+    const token = getToken();
+    const res = await fetch(`${API_BASE}/api/admin/upload`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData,
+    });
+    if (!res.ok) throw new Error('Upload failed');
+    return res.json();
+  },
+  deleteImage: async (url: string) => {
+    return fetchAPI('/api/admin/upload', { method: 'DELETE', body: JSON.stringify({ url }) });
+  },
 };
 
 export const adminDashboardAPI = {

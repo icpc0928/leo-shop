@@ -8,25 +8,10 @@ import { mockProducts, categories as mockCategories } from "@/lib/mockData";
 import { productAPI } from "@/lib/api";
 import { useTranslations } from "next-intl";
 import { SlidersHorizontal, X } from "lucide-react";
+import { mapApiProduct } from "@/lib/mappers";
 import type { Product } from "@/types";
 
 type SortOption = "default" | "price-asc" | "price-desc" | "name";
-
-function mapApiProduct(p: Record<string, unknown>): Product {
-  return {
-    ...p,
-    id: p.id as number,
-    slug: p.slug as string,
-    name: p.name as string,
-    price: p.price as number,
-    comparePrice: p.comparePrice as number | undefined,
-    images: p.imageUrl ? [p.imageUrl as string] : [],
-    description: p.description as string,
-    category: p.category as string,
-    stock: p.stock as number,
-    rating: 0,
-  };
-}
 
 export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);

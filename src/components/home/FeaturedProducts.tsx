@@ -1,31 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import Container from "@/components/ui/Container";
 import ProductGrid from "@/components/product/ProductGrid";
 import { mockProducts } from "@/lib/mockData";
 import { productAPI } from "@/lib/api";
+import { mapApiProduct } from "@/lib/mappers";
 import { useTranslations } from "next-intl";
 import type { Product } from "@/types";
 
-function mapApiProduct(p: Record<string, unknown>): Product {
-  return {
-    ...p,
-    id: p.id as number,
-    slug: p.slug as string,
-    name: p.name as string,
-    price: p.price as number,
-    comparePrice: p.comparePrice as number | undefined,
-    images: p.imageUrl ? [p.imageUrl as string] : [],
-    description: p.description as string,
-    category: p.category as string,
-    stock: p.stock as number,
-    rating: 0,
-  };
-}
-
 export default function FeaturedProducts() {
   const t = useTranslations("featured");
+  const tp = useTranslations("product");
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -46,13 +33,16 @@ export default function FeaturedProducts() {
   return (
     <section className="py-20">
       <Container>
-        <div className="text-center mb-12">
-          <h2 className="text-2xl lg:text-3xl font-serif tracking-wider mb-3">
+        <div className="flex items-center justify-between mb-10">
+          <h2 className="text-2xl lg:text-3xl font-serif tracking-wider">
             {t("title")}
           </h2>
-          <div className="divider max-w-xs mx-auto">
-            <span className="text-sm text-base-content/60">{t("subtitle")}</span>
-          </div>
+          <Link
+            href="/products"
+            className="text-sm tracking-wider text-base-content/50 hover:text-[#c8956c] transition-colors"
+          >
+            {tp("allProducts")} →
+          </Link>
         </div>
         {loading ? (
           <div className="flex justify-center py-12">

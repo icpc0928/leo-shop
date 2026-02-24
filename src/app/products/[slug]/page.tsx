@@ -18,26 +18,11 @@ import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import "swiper/css/thumbs";
 import "swiper/css/navigation";
-import { Minus, Plus, Star, ShoppingBag } from "lucide-react";
+import { Minus, Plus, ShoppingBag } from "lucide-react";
+import { mapApiProduct } from "@/lib/mappers";
 import type { Product } from "@/types";
 
 type Tab = "description" | "specs" | "reviews";
-
-function mapApiProduct(p: Record<string, unknown>): Product {
-  return {
-    ...p,
-    id: p.id as number,
-    slug: p.slug as string,
-    name: p.name as string,
-    price: p.price as number,
-    comparePrice: p.comparePrice as number | undefined,
-    images: p.imageUrl ? [p.imageUrl as string] : [],
-    description: p.description as string,
-    category: p.category as string,
-    stock: p.stock as number,
-    rating: 0,
-  };
-}
 
 export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -153,25 +138,17 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
           <p className="text-sm text-muted tracking-wider mb-2">{product.category}</p>
           <h1 className="text-3xl font-serif tracking-wider mb-4">{product.name}</h1>
 
-          <div className="flex items-center gap-2 mb-4">
-            <div className="flex items-center gap-1">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  aria-hidden="true"
-                  className={`w-4 h-4 ${i < Math.floor(product.rating) ? "fill-primary text-primary" : "text-border"}`}
-                />
-              ))}
-            </div>
-            <span className="text-sm text-muted">{product.rating}</span>
-          </div>
-
           <div className="flex items-center gap-3 mb-6">
-            <span className="text-2xl">{formatPrice(product.price)}</span>
-            {product.comparePrice && (
-              <span className="text-lg text-muted line-through">
-                {formatPrice(product.comparePrice)}
-              </span>
+            <span className="text-2xl font-medium">{formatPrice(product.price)}</span>
+            {product.comparePrice && product.comparePrice > product.price && (
+              <>
+                <span className="text-lg text-base-content/40 line-through">
+                  {formatPrice(product.comparePrice)}
+                </span>
+                <span className="text-xs bg-[#c8956c] text-white px-2 py-0.5 rounded-sm">
+                  -{Math.round((1 - product.price / product.comparePrice) * 100)}%
+                </span>
+              </>
             )}
           </div>
 

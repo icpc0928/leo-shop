@@ -7,28 +7,32 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Plus, Pencil, Trash2, Search } from "lucide-react";
 import { mockProducts, categories as mockCategories } from "@/lib/mockData";
 import { productAPI, adminProductAPI } from "@/lib/api";
+import { resolveImageUrl } from "@/lib/mappers";
+import ImageUploader from "@/components/admin/ImageUploader";
 import { formatCurrency } from "@/lib/format";
 import type { Product } from "@/types";
 
 type ProductForm = {
   name: string; slug: string; description: string; price: string; comparePrice: string;
-  category: string; stock: string; image: string; isActive: boolean;
+  category: string; stock: string; imageUrls: string[]; isActive: boolean;
 };
 
 const emptyForm: ProductForm = {
   name: "", slug: "", description: "", price: "", comparePrice: "",
-  category: "", stock: "", image: "", isActive: true,
+  category: "", stock: "", imageUrls: [], isActive: true,
 };
 
 function productToForm(p: Product): ProductForm {
   return {
     name: p.name, slug: p.slug, description: p.description,
     price: String(p.price), comparePrice: p.comparePrice ? String(p.comparePrice) : "",
-    category: p.category, stock: String(p.stock), image: p.images[0] || p.imageUrl || "", isActive: p.active !== false,
+    category: p.category, stock: String(p.stock), imageUrls: p.images || [], isActive: p.active !== false,
   };
 }
 
 function mapApiProduct(p: Record<string, unknown>): Product {
+  const imageUrls = (p.imageUrls as string[]) || [];
+  const images = imageUrls.length > 0 ? imageUrls : p.imageUrl ? [p.imageUrl as string] : [];
   return {
     ...p,
     id: p.id as number,
@@ -36,7 +40,7 @@ function mapApiProduct(p: Record<string, unknown>): Product {
     name: p.name as string,
     price: p.price as number,
     comparePrice: p.comparePrice as number | undefined,
-    images: p.imageUrl ? [p.imageUrl as string] : [],
+    images,
     imageUrl: p.imageUrl as string | undefined,
     description: p.description as string,
     category: p.category as string,
@@ -99,7 +103,8 @@ export default function AdminProducts() {
       description: form.description,
       price: Number(form.price),
       comparePrice: form.comparePrice ? Number(form.comparePrice) : undefined,
-      imageUrl: form.image || "https://picsum.photos/seed/new/600/600",
+      imageUrl: form.imageUrls[0] || "https://picsum.photos/seed/new/600/600",
+      imageUrls: form.imageUrls,
       category: form.category,
       stock: Number(form.stock),
       active: form.isActive,
@@ -118,14 +123,14 @@ export default function AdminProducts() {
         setProducts((prev) => prev.map((p) => String(p.id) === String(editingId) ? {
           ...p, name: form.name, slug: form.slug, description: form.description,
           price: Number(form.price), comparePrice: form.comparePrice ? Number(form.comparePrice) : undefined,
-          category: form.category, stock: Number(form.stock), images: form.image ? [form.image] : p.images,
+          category: form.category, stock: Number(form.stock), images: form.imageUrls.length > 0 ? form.imageUrls : p.images,
         } : p));
       } else {
         const newProduct: Product = {
           id: Date.now(), name: form.name, slug: form.slug, description: form.description,
           price: Number(form.price), comparePrice: form.comparePrice ? Number(form.comparePrice) : undefined,
           category: form.category, stock: Number(form.stock),
-          images: form.image ? [form.image] : ["https://picsum.photos/seed/new/600/600"], rating: 0,
+          images: form.imageUrls.length > 0 ? form.imageUrls : ["https://picsum.photos/seed/new/600/600"], rating: 0,
         };
         setProducts((prev) => [newProduct, ...prev]);
       }
@@ -194,7 +199,7 @@ export default function AdminProducts() {
                 {filtered.map((product) => (
                   <tr key={product.id}>
                     <td>
-                      <Image src={product.images[0] || "https://picsum.photos/40/40"} alt={product.name} width={40} height={40} className="rounded object-cover" />
+                      <Image src={resolveImageUrl(product.images[0] || "https://picsum.photos/40/40")} alt={product.name} width={40} height={40} className="rounded object-cover" />
                     </td>
                     <td className="font-medium">{product.name}</td>
                     <td className="text-base-content/50">{product.category}</td>
@@ -248,8 +253,11 @@ export default function AdminProducts() {
               <div className="form-control"><label className="label"><span className="label-text">庫存</span></label>
                 <input type="number" className="input input-bordered w-full" value={form.stock} onChange={(e) => setForm({ ...form, stock: e.target.value })} /></div>
             </div>
-            <div className="form-control"><label className="label"><span className="label-text">圖片 URL</span></label>
-              <input className="input input-bordered w-full" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} /></div>
+            <div className="form-control"><label className="label"><span className="label-text">商品圖片</span></label>
+              <ImageUploader
+                existingImages={form.imageUrls}
+                onChange={(urls) => setForm({ ...form, imageUrls: urls })}
+              /></div>
             <label className="label cursor-pointer justify-start gap-2">
               <input type="checkbox" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} className="checkbox checkbox-sm checkbox-primary" />
               <span className="label-text">啟用</span>

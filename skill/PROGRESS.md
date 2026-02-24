@@ -139,6 +139,12 @@
 - [x] 主題預覽頁面（`src/app/themes/page.tsx`，17 主題色票展示 + 點擊切換）
 - [x] `npm run build` 通過
 
+### Phase 4.6 - 圖片上傳功能 ✅
+- [x] Admin 圖片上傳組件（拖放 + 多圖 + 預覽）
+- [x] 商品管理支援圖片上傳
+- [x] 圖片上傳 API（POST /api/admin/upload，檔案系統儲存）
+- [x] 靜態資源服務（/uploads/**）
+
 ### Phase 5 - 錢包與金流（待做）
 
 #### 5.1 錢包系統
