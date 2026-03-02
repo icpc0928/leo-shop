@@ -68,6 +68,16 @@ export interface Address {
   isDefault: boolean;
 }
 
+export interface CryptoPayment {
+  paymentId: string;
+  payAddress: string;
+  payAmount: string;
+  payCurrency: string;
+  priceAmount: number;
+  priceCurrency: string;
+  status: string;
+}
+
 export interface PaginatedResponse<T> {
   content: T[];
   totalPages: number;

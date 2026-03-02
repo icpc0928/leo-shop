@@ -135,6 +135,14 @@ export const uploadAPI = {
   },
 };
 
+// Crypto Payment API
+export const cryptoPaymentAPI = {
+  create: (data: { orderId: number; payCurrency: string }) =>
+    fetchAPI('/api/payments/crypto/create', { method: 'POST', body: JSON.stringify(data) }),
+  getStatus: (paymentId: string) =>
+    fetchAPI(`/api/payments/crypto/status/${paymentId}`),
+};
+
 export const adminDashboardAPI = {
   getStats: () => fetchAPI('/api/admin/dashboard/stats'),
   getRevenue: () => fetchAPI('/api/admin/dashboard/revenue'),

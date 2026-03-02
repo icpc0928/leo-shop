@@ -145,7 +145,19 @@
 - [x] 圖片上傳 API（POST /api/admin/upload，檔案系統儲存）
 - [x] 靜態資源服務（/uploads/**）
 
-### Phase 5 - 錢包與金流（待做）
+### Phase 5 - 錢包與金流（進行中）
+
+#### 5.0 加密貨幣直接付款（NOWPayments）✅
+- [x] CryptoPayment Entity + Repository
+- [x] NowPaymentsService（createPayment / getPaymentStatus / handleWebhook）
+- [x] CryptoPaymentController（POST create / GET status / POST webhook）
+- [x] DTOs（CryptoPaymentRequest / CryptoPaymentResponse）
+- [x] Order model 更新（cryptoPaymentId 欄位、PAID 狀態）
+- [x] SecurityConfig 更新（webhook permitAll）
+- [x] application.yml nowpayments 設定
+- [x] RestTemplate bean（AppConfig）
+- [x] HMAC-SHA512 webhook 簽名驗證
+- [x] `./gradlew compileJava` 通過 ✅
 
 #### 5.1 錢包系統
 - [ ] Wallet Entity（userId, balance, currency=USD）
@@ -153,6 +165,20 @@
 - [ ] 錢包 API（查餘額、交易紀錄）
 - [ ] 前端：會員中心「我的錢包」頁面
 - [ ] 前端：交易紀錄頁面
+
+#### 5.1.5 加密貨幣支付頁面（前端）✅
+- [x] 安裝 qrcode.react
+- [x] API Client 新增 cryptoPaymentAPI（create / getStatus）
+- [x] Types 新增 CryptoPayment interface
+- [x] Checkout 頁面：付款方式改為「貨到付款」+「加密貨幣（BTC/USDT）」
+- [x] 加密貨幣付款頁面（`/checkout/crypto/[paymentId]`）
+  - QR Code 顯示錢包地址
+  - 複製地址按鈕
+  - 即時狀態輪詢（每 10 秒）
+  - 成功動畫 + 自動跳轉
+  - 過期/失敗提示
+- [x] i18n 中英文翻譯（cryptoPayment namespace）
+- [x] `npm run build` 通過
 
 #### 5.2 儲值功能
 - [ ] 儲值 API（產生付款請求）

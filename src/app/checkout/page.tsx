@@ -6,10 +6,11 @@ import Link from "next/link";
 import Container from "@/components/ui/Container";
 import Breadcrumb from "@/components/layout/Breadcrumb";
 import { useCartStore } from "@/stores/cartStore";
-import { orderAPI } from "@/lib/api";
+import { orderAPI, cryptoPaymentAPI } from "@/lib/api";
 import { formatPrice } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-import { Check, CreditCard, Building2, Store, ShoppingBag } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Check, CreditCard, Building2, Store, ShoppingBag, Bitcoin } from "lucide-react";
 
 interface ShippingForm {
   name: string; email: string; phone: string; city: string; district: string; zipCode: string; address: string;
@@ -24,11 +25,13 @@ export default function CheckoutPage() {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<ShippingForm>(initialForm);
   const [errors, setErrors] = useState<FormErrors>({});
-  const [paymentMethod, setPaymentMethod] = useState("credit-card");
+  const [paymentMethod, setPaymentMethod] = useState("cod");
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
   const [placing, setPlacing] = useState(false);
   const [orderError, setOrderError] = useState("");
+  const [cryptoCurrency, setCryptoCurrency] = useState("BTC");
+  const router = useRouter();
   const t = useTranslations("checkout");
 
   useEffect(() => { setMounted(true); }, []);
@@ -91,6 +94,8 @@ export default function CheckoutPage() {
     "credit-card": "CREDIT_CARD",
     "atm": "ATM",
     "convenience": "CONVENIENCE",
+    "cod": "CASH_ON_DELIVERY",
+    "crypto": "CRYPTO",
   };
 
   const handlePlaceOrder = async () => {
@@ -110,6 +115,22 @@ export default function CheckoutPage() {
         paymentMethod: paymentMethodMap[paymentMethod] || "CREDIT_CARD",
       };
       const result = await orderAPI.create(orderData);
+
+      if (paymentMethod === "crypto") {
+        try {
+          const cryptoResult = await cryptoPaymentAPI.create({
+            orderId: result.id,
+            payCurrency: cryptoCurrency,
+          });
+          clearCart();
+          router.push(`/checkout/crypto/${cryptoResult.paymentId}`);
+          return;
+        } catch {
+          // If crypto payment creation fails, still show order complete
+          console.warn("Crypto payment creation failed");
+        }
+      }
+
       setOrderNumber(result.orderNumber);
       clearCart();
       setOrderComplete(true);
@@ -137,9 +158,8 @@ export default function CheckoutPage() {
   ];
 
   const paymentOptions = [
-    { id: "credit-card", icon: CreditCard, label: t("creditCard"), note: t("creditCardNote") },
-    { id: "atm", icon: Building2, label: t("atm"), note: t("atmNote") },
-    { id: "convenience", icon: Store, label: t("convenience"), note: t("convenienceNote") },
+    { id: "cod", icon: Store, label: t("cod"), note: t("codNote") },
+    { id: "crypto", icon: Bitcoin, label: t("crypto"), note: t("cryptoNote") },
   ];
 
   const inputClass = (field: string) =>
@@ -217,22 +237,36 @@ export default function CheckoutPage() {
               <h2 className="text-lg font-medium tracking-wider mb-6">{t("paymentMethod")}</h2>
               <div className="space-y-3">
                 {paymentOptions.map((opt) => (
-                  <label
-                    key={opt.id}
-                    className={`flex items-start gap-4 p-4 border rounded-lg cursor-pointer transition-colors ${
-                      paymentMethod === opt.id ? "border-primary bg-primary/5" : "border-base-300 hover:border-base-content/30"
-                    }`}
-                  >
-                    <input type="radio" name="payment" value={opt.id} checked={paymentMethod === opt.id}
-                      onChange={() => setPaymentMethod(opt.id)} className="radio radio-primary mt-1" />
-                    <div className="flex items-center gap-3 flex-1">
-                      <opt.icon className="w-5 h-5 text-base-content/50 shrink-0" strokeWidth={1.5} />
-                      <div>
-                        <p className="text-sm font-medium">{opt.label}</p>
-                        <p className="text-xs text-base-content/50 mt-0.5">{opt.note}</p>
+                  <div key={opt.id}>
+                    <label
+                      className={`flex items-start gap-4 p-4 border rounded-lg cursor-pointer transition-colors ${
+                        paymentMethod === opt.id ? "border-primary bg-primary/5" : "border-base-300 hover:border-base-content/30"
+                      }`}
+                    >
+                      <input type="radio" name="payment" value={opt.id} checked={paymentMethod === opt.id}
+                        onChange={() => setPaymentMethod(opt.id)} className="radio radio-primary mt-1" />
+                      <div className="flex items-center gap-3 flex-1">
+                        <opt.icon className="w-5 h-5 text-base-content/50 shrink-0" strokeWidth={1.5} />
+                        <div>
+                          <p className="text-sm font-medium">{opt.label}</p>
+                          <p className="text-xs text-base-content/50 mt-0.5">{opt.note}</p>
+                        </div>
                       </div>
-                    </div>
-                  </label>
+                    </label>
+                    {opt.id === "crypto" && paymentMethod === "crypto" && (
+                      <div className="ml-10 mt-2 flex gap-3">
+                        {["BTC", "USDT"].map((coin) => (
+                          <label key={coin} className={`flex items-center gap-2 px-4 py-2 border rounded-lg cursor-pointer transition-colors ${
+                            cryptoCurrency === coin ? "border-primary bg-primary/5" : "border-base-300"
+                          }`}>
+                            <input type="radio" name="crypto" value={coin} checked={cryptoCurrency === coin}
+                              onChange={() => setCryptoCurrency(coin)} className="radio radio-primary radio-sm" />
+                            <span className="text-sm font-medium">{coin}</span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 ))}
               </div>
               <div className="mt-8 flex gap-4">
@@ -258,7 +292,10 @@ export default function CheckoutPage() {
               <div className="card bg-base-200 mb-4">
                 <div className="card-body p-4">
                   <h3 className="text-sm font-medium mb-2">{t("paymentMethod")}</h3>
-                  <p className="text-sm text-base-content/60">{paymentOptions.find((o) => o.id === paymentMethod)?.label}</p>
+                  <p className="text-sm text-base-content/60">
+                    {paymentOptions.find((o) => o.id === paymentMethod)?.label}
+                    {paymentMethod === "crypto" && ` (${cryptoCurrency})`}
+                  </p>
                 </div>
               </div>
               <div className="card bg-base-200 mb-4">
