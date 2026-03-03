@@ -129,7 +129,8 @@
     "cod": "貨到付款",
     "codNote": "收到商品時付款給配送員",
     "crypto": "加密貨幣",
-    "cryptoNote": "支援 BTC / USDT 付款"
+    "cryptoNote": "支援多種加密貨幣直接轉帳付款",
+    "noCryptoMethods": "目前無可用的加密幣種"
   },
   "cryptoPayment": {
     "title": "加密貨幣付款",
@@ -152,7 +153,76 @@
     "paymentSuccess": "付款成功！",
     "redirecting": "即將跳轉到訂單頁面...",
     "expiredMessage": "付款已過期，請重新下單",
-    "failedMessage": "付款失敗，請聯絡客服"
+    "failedMessage": "付款失敗，請聯絡客服",
+    "txHash": "交易 Hash",
+    "submit": "提交",
+    "submitError": "提交失敗，請稍後再試",
+    "networkWarning": "⚠️ 請使用 {network} 網路轉帳，使用錯誤網路可能導致資金遺失！",
+    "verifying": "驗證中...",
+    "verifyFailed": "驗證失敗",
+    "manualReview": "人工審核中..."
+  },
+  "admin": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "products": "商品管理",
+      "orders": "訂單管理",
+      "users": "用戶管理",
+      "paymentMethods": "支付管理",
+      "cryptoOrders": "加密訂單",
+      "backToStore": "回到前台"
+    },
+    "login": {
+      "title": "管理後台登入",
+      "email": "Email",
+      "password": "密碼",
+      "submit": "登入",
+      "loggingIn": "登入中...",
+      "noPermission": "無管理員權限，此帳號不是管理員。",
+      "loginFailed": "登入失敗"
+    },
+    "paymentMethods": {
+      "title": "支付管理",
+      "add": "新增幣種",
+      "edit": "編輯幣種",
+      "name": "名稱",
+      "symbol": "符號",
+      "network": "網路",
+      "walletAddress": "錢包地址",
+      "exchangeRate": "匯率 (TWD)",
+      "status": "狀態",
+      "actions": "操作",
+      "contractAddress": "合約地址",
+      "rateSource": "匯率來源",
+      "gateway": "Gateway",
+      "explorerUrl": "區塊鏈瀏覽器 URL",
+      "iconUrl": "Icon URL",
+      "save": "儲存",
+      "cancel": "取消",
+      "delete": "刪除",
+      "confirmDelete": "確定要刪除此幣種嗎？此操作無法復原。",
+      "empty": "尚無幣種設定",
+      "manual": "手動",
+      "api": "API"
+    },
+    "cryptoOrders": {
+      "title": "加密訂單",
+      "orderId": "訂單 ID",
+      "symbol": "幣種",
+      "expectedAmount": "應付金額",
+      "txHash": "TX Hash",
+      "status": "狀態",
+      "time": "時間",
+      "actions": "操作",
+      "verify": "驗證",
+      "confirm": "確認",
+      "reject": "拒絕",
+      "empty": "尚無加密訂單",
+      "pending": "待驗證",
+      "verified": "已驗證",
+      "failed": "失敗",
+      "manual": "人工處理"
+    }
   },
   "about": {
     "title": "關於我們",

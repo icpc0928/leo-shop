@@ -6,11 +6,12 @@ import Link from "next/link";
 import Container from "@/components/ui/Container";
 import Breadcrumb from "@/components/layout/Breadcrumb";
 import { useCartStore } from "@/stores/cartStore";
-import { orderAPI, cryptoPaymentAPI } from "@/lib/api";
+import { orderAPI, cryptoPaymentAPI, paymentMethodAPI, cryptoOrderAPI } from "@/lib/api";
 import { formatPrice } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { Check, CreditCard, Building2, Store, ShoppingBag, Bitcoin } from "lucide-react";
+import { Check, Store, ShoppingBag, Bitcoin, Coins } from "lucide-react";
+import type { PaymentMethod } from "@/types";
 
 interface ShippingForm {
   name: string; email: string; phone: string; city: string; district: string; zipCode: string; address: string;
@@ -30,11 +31,28 @@ export default function CheckoutPage() {
   const [orderNumber, setOrderNumber] = useState("");
   const [placing, setPlacing] = useState(false);
   const [orderError, setOrderError] = useState("");
-  const [cryptoCurrency, setCryptoCurrency] = useState("BTC");
+  const [selectedCryptoMethodId, setSelectedCryptoMethodId] = useState<number | null>(null);
+  const [cryptoMethods, setCryptoMethods] = useState<PaymentMethod[]>([]);
   const router = useRouter();
   const t = useTranslations("checkout");
 
   useEffect(() => { setMounted(true); }, []);
+
+  // Fetch enabled payment methods
+  useEffect(() => {
+    if (!mounted) return;
+    (async () => {
+      try {
+        const data = await paymentMethodAPI.getEnabled();
+        const methods: PaymentMethod[] = Array.isArray(data) ? data : data.content || [];
+        setCryptoMethods(methods);
+        if (methods.length > 0) setSelectedCryptoMethodId(methods[0].id);
+      } catch {
+        // fallback: no crypto methods available
+      }
+    })();
+  }, [mounted]);
+
   if (!mounted) return null;
 
   const shipping = totalPrice() >= 2000 ? 0 : 120;
@@ -91,9 +109,6 @@ export default function CheckoutPage() {
   };
 
   const paymentMethodMap: Record<string, string> = {
-    "credit-card": "CREDIT_CARD",
-    "atm": "ATM",
-    "convenience": "CONVENIENCE",
     "cod": "CASH_ON_DELIVERY",
     "crypto": "CRYPTO",
   };
@@ -112,31 +127,42 @@ export default function CheckoutPage() {
         shippingPhone: form.phone,
         shippingEmail: form.email,
         shippingAddress: fullAddress,
-        paymentMethod: paymentMethodMap[paymentMethod] || "CREDIT_CARD",
+        paymentMethod: paymentMethodMap[paymentMethod] || "CASH_ON_DELIVERY",
       };
       const result = await orderAPI.create(orderData);
 
-      if (paymentMethod === "crypto") {
+      if (paymentMethod === "crypto" && selectedCryptoMethodId) {
         try {
-          const cryptoResult = await cryptoPaymentAPI.create({
+          const cryptoResult = await cryptoOrderAPI.create({
             orderId: result.id,
-            payCurrency: cryptoCurrency,
+            paymentMethodId: selectedCryptoMethodId,
           });
           clearCart();
-          router.push(`/checkout/crypto/${cryptoResult.paymentId}`);
+          // Use the crypto order ID as paymentId param
+          router.push(`/checkout/crypto/${cryptoResult.id}`);
           return;
         } catch {
-          // If crypto payment creation fails, still show order complete
-          console.warn("Crypto payment creation failed");
+          // fallback: try old NOWPayments API
+          try {
+            const selectedMethod = cryptoMethods.find(m => m.id === selectedCryptoMethodId);
+            const cryptoResult = await cryptoPaymentAPI.create({
+              orderId: result.id,
+              payCurrency: selectedMethod?.symbol || "BTC",
+            });
+            clearCart();
+            router.push(`/checkout/crypto/${cryptoResult.paymentId}`);
+            return;
+          } catch {
+            console.warn("Crypto payment creation failed");
+          }
         }
       }
 
       setOrderNumber(result.orderNumber);
       clearCart();
       setOrderComplete(true);
-    } catch (e: unknown) {
+    } catch {
       console.warn('Order API failed, using fallback');
-      // Fallback: generate local order number
       const num = "LS" + Date.now().toString(36).toUpperCase();
       setOrderNumber(num);
       clearCart();
@@ -156,6 +182,8 @@ export default function CheckoutPage() {
     { num: 2, label: t("step2") },
     { num: 3, label: t("step3") },
   ];
+
+  const selectedCryptoMethod = cryptoMethods.find(m => m.id === selectedCryptoMethodId);
 
   const paymentOptions = [
     { id: "cod", icon: Store, label: t("cod"), note: t("codNote") },
@@ -253,15 +281,23 @@ export default function CheckoutPage() {
                         </div>
                       </div>
                     </label>
+                    {/* Crypto sub-options: dynamic from API */}
                     {opt.id === "crypto" && paymentMethod === "crypto" && (
-                      <div className="ml-10 mt-2 flex gap-3">
-                        {["BTC", "USDT"].map((coin) => (
-                          <label key={coin} className={`flex items-center gap-2 px-4 py-2 border rounded-lg cursor-pointer transition-colors ${
-                            cryptoCurrency === coin ? "border-primary bg-primary/5" : "border-base-300"
+                      <div className="ml-10 mt-2 flex flex-wrap gap-3">
+                        {cryptoMethods.length === 0 && (
+                          <p className="text-xs text-base-content/40">目前無可用的加密幣種</p>
+                        )}
+                        {cryptoMethods.map((cm) => (
+                          <label key={cm.id} className={`flex items-center gap-2 px-4 py-2 border rounded-lg cursor-pointer transition-colors ${
+                            selectedCryptoMethodId === cm.id ? "border-primary bg-primary/5" : "border-base-300"
                           }`}>
-                            <input type="radio" name="crypto" value={coin} checked={cryptoCurrency === coin}
-                              onChange={() => setCryptoCurrency(coin)} className="radio radio-primary radio-sm" />
-                            <span className="text-sm font-medium">{coin}</span>
+                            <input type="radio" name="crypto" value={cm.id} checked={selectedCryptoMethodId === cm.id}
+                              onChange={() => setSelectedCryptoMethodId(cm.id)} className="radio radio-primary radio-sm" />
+                            <Coins className="w-4 h-4 text-base-content/40" />
+                            <div>
+                              <span className="text-sm font-medium">{cm.symbol}</span>
+                              <span className="text-xs text-base-content/50 ml-1">({cm.network})</span>
+                            </div>
                           </label>
                         ))}
                       </div>
@@ -294,7 +330,7 @@ export default function CheckoutPage() {
                   <h3 className="text-sm font-medium mb-2">{t("paymentMethod")}</h3>
                   <p className="text-sm text-base-content/60">
                     {paymentOptions.find((o) => o.id === paymentMethod)?.label}
-                    {paymentMethod === "crypto" && ` (${cryptoCurrency})`}
+                    {paymentMethod === "crypto" && selectedCryptoMethod && ` (${selectedCryptoMethod.symbol} - ${selectedCryptoMethod.network})`}
                   </p>
                 </div>
               </div>

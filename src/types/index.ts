@@ -84,3 +84,39 @@ export interface PaginatedResponse<T> {
   totalElements: number;
   currentPage: number;
 }
+
+export interface PaymentMethod {
+  id: number;
+  name: string;
+  symbol: string;
+  network: string;
+  contractAddress?: string;
+  walletAddress: string;
+  exchangeRate: number;
+  rateSource: string;
+  gateway: string;
+  explorerUrl?: string;
+  iconUrl?: string;
+  enabled: boolean;
+  sortOrder?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CryptoOrder {
+  id: number;
+  orderId: number;
+  paymentMethodId: number;
+  symbol: string;
+  network: string;
+  expectedAmount: number;
+  actualAmount?: number;
+  walletAddress: string;
+  txHash?: string;
+  verifyStatus: "pending" | "verified" | "failed" | "manual";
+  verifyMessage?: string;
+  explorerUrl?: string;
+  createdAt?: string;
+  paidAt?: string;
+  verifiedAt?: string;
+}

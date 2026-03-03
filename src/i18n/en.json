@@ -129,7 +129,8 @@
     "cod": "Cash on Delivery",
     "codNote": "Pay when you receive the package",
     "crypto": "Cryptocurrency",
-    "cryptoNote": "Pay with BTC / USDT"
+    "cryptoNote": "Pay with crypto direct transfer",
+    "noCryptoMethods": "No crypto payment methods available"
   },
   "cryptoPayment": {
     "title": "Crypto Payment",
@@ -152,7 +153,76 @@
     "paymentSuccess": "Payment Successful!",
     "redirecting": "Redirecting to orders page...",
     "expiredMessage": "Payment expired, please place a new order",
-    "failedMessage": "Payment failed, please contact support"
+    "failedMessage": "Payment failed, please contact support",
+    "txHash": "Transaction Hash",
+    "submit": "Submit",
+    "submitError": "Submit failed, please try again",
+    "networkWarning": "⚠️ Please use {network} network. Using wrong network may result in lost funds!",
+    "verifying": "Verifying...",
+    "verifyFailed": "Verification failed",
+    "manualReview": "Under manual review..."
+  },
+  "admin": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "products": "Products",
+      "orders": "Orders",
+      "users": "Users",
+      "paymentMethods": "Payment Methods",
+      "cryptoOrders": "Crypto Orders",
+      "backToStore": "Back to Store"
+    },
+    "login": {
+      "title": "Admin Login",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign In",
+      "loggingIn": "Signing in...",
+      "noPermission": "No admin permission. This account is not an admin.",
+      "loginFailed": "Login failed"
+    },
+    "paymentMethods": {
+      "title": "Payment Methods",
+      "add": "Add Currency",
+      "edit": "Edit Currency",
+      "name": "Name",
+      "symbol": "Symbol",
+      "network": "Network",
+      "walletAddress": "Wallet Address",
+      "exchangeRate": "Exchange Rate (TWD)",
+      "status": "Status",
+      "actions": "Actions",
+      "contractAddress": "Contract Address",
+      "rateSource": "Rate Source",
+      "gateway": "Gateway",
+      "explorerUrl": "Explorer URL",
+      "iconUrl": "Icon URL",
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "confirmDelete": "Are you sure you want to delete this currency? This cannot be undone.",
+      "empty": "No payment methods configured",
+      "manual": "Manual",
+      "api": "API"
+    },
+    "cryptoOrders": {
+      "title": "Crypto Orders",
+      "orderId": "Order ID",
+      "symbol": "Currency",
+      "expectedAmount": "Expected Amount",
+      "txHash": "TX Hash",
+      "status": "Status",
+      "time": "Time",
+      "actions": "Actions",
+      "verify": "Verify",
+      "confirm": "Confirm",
+      "reject": "Reject",
+      "empty": "No crypto orders",
+      "pending": "Pending",
+      "verified": "Verified",
+      "failed": "Failed",
+      "manual": "Manual"
+    }
   },
   "about": {
     "title": "About Us",

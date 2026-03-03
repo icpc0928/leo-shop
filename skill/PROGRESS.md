@@ -159,6 +159,26 @@
 - [x] HMAC-SHA512 webhook 簽名驗證
 - [x] `./gradlew compileJava` 通過 ✅
 
+#### 5.0.5 加密貨幣直接轉帳支付（後端）✅
+- [x] PaymentMethod Entity + Repository（幣種管理）
+- [x] PaymentMethodService（CRUD + toggle 啟停用）
+- [x] PaymentMethodController（Admin CRUD: /api/admin/payment-methods）
+- [x] PaymentMethodPublicController（GET /api/payment-methods → 列出已啟用幣種）
+- [x] CryptoOrder Entity + Repository（加密支付訂單）
+- [x] CryptoOrderService（建立訂單、金額換算+隨機識別碼、提交hash、自動驗證、手動確認/拒絕）
+- [x] CryptoOrderController（POST /api/crypto-orders、PUT submit-hash、GET status）
+- [x] AdminCryptoOrderController（GET list、POST verify/confirm/reject）
+- [x] ChainVerifier 介面 + 策略模式
+  - PolygonVerifier（Polygonscan API）
+  - EthereumVerifier（Etherscan API）
+  - TronVerifier（TronGrid API）
+  - BitcoinVerifier（Blockchain.info API）
+  - CryptoVerifyService（根據 network 自動選擇驗證器）
+- [x] DTOs（PaymentMethodRequest/Response、CryptoOrderRequest/Response）
+- [x] SecurityConfig 更新（payment-methods permitAll、crypto-orders authenticated、admin/** ADMIN）
+- [x] DataInitializer 預設幣種（BTC/USDT TRC-20/ETH，預設 disabled）
+- [x] `./gradlew compileJava` 通過 ✅
+
 #### 5.1 錢包系統
 - [ ] Wallet Entity（userId, balance, currency=USD）
 - [ ] Transaction Entity（type: TOPUP/PURCHASE/REFUND, amount, status, reference）
@@ -178,6 +198,30 @@
   - 成功動畫 + 自動跳轉
   - 過期/失敗提示
 - [x] i18n 中英文翻譯（cryptoPayment namespace）
+- [x] `npm run build` 通過
+
+#### 5.1.6 Admin 獨立登入頁面 ✅
+- [x] Admin 登入頁面（`/admin/login`）— 深色背景、居中卡片、Email+密碼
+- [x] AdminAuthGuard 組件（`src/components/admin/AdminAuthGuard.tsx`）— 角色檢查、未登入跳轉、無權限提示
+- [x] Admin Layout 修改 — `/admin/login` 不顯示側邊欄、其他頁面包裹 AuthGuard
+- [x] 側邊欄新增「支付管理」「加密訂單」導航項
+- [x] 登出跳轉 `/admin/login`
+- [x] LayoutWrapper 確認 `/admin/*` 不顯示前台 Header/Footer
+
+#### 5.1.7 加密貨幣直接轉帳前端 ✅
+- [x] API Client 更新（paymentMethodAPI、adminPaymentMethodAPI、cryptoOrderAPI、adminCryptoOrderAPI）
+- [x] Types 更新（PaymentMethod、CryptoOrder interface）
+- [x] Admin 幣種管理頁面（`/admin/payment-methods`）— CRUD 表格、新增/編輯 Dialog、啟停用 Toggle
+- [x] Admin 加密訂單頁面（`/admin/crypto-orders`）— 訂單列表、狀態 badge、驗證/確認/拒絕操作
+- [x] 結帳頁面修改 — 動態載入啟用幣種（GET /api/payment-methods）、選擇後建立 crypto order
+- [x] 付款頁面整合 — 支援 NOWPayments + 直接轉帳雙模式（numeric ID = direct, string = nowpayments）
+  - QR Code 收款地址
+  - 複製地址按鈕
+  - 網路提醒
+  - 交易 Hash 輸入+提交
+  - 10 秒 polling 驗證狀態
+  - verified → 成功動畫 → 跳轉訂單頁
+- [x] i18n 中英文翻譯（admin sidebar、paymentMethods、cryptoOrders、付款頁面）
 - [x] `npm run build` 通過
 
 #### 5.2 儲值功能

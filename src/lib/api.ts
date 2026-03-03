@@ -147,3 +147,34 @@ export const adminDashboardAPI = {
   getStats: () => fetchAPI('/api/admin/dashboard/stats'),
   getRevenue: () => fetchAPI('/api/admin/dashboard/revenue'),
 };
+
+// Payment Method API (public)
+export const paymentMethodAPI = {
+  getEnabled: () => fetchAPI('/api/payment-methods'),
+};
+
+// Admin Payment Method API
+export const adminPaymentMethodAPI = {
+  getAll: () => fetchAPI('/api/admin/payment-methods'),
+  create: (data: Record<string, unknown>) => fetchAPI('/api/admin/payment-methods', { method: 'POST', body: JSON.stringify(data) }),
+  update: (id: number, data: Record<string, unknown>) => fetchAPI(`/api/admin/payment-methods/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  delete: (id: number) => fetchAPI(`/api/admin/payment-methods/${id}`, { method: 'DELETE' }),
+  toggle: (id: number) => fetchAPI(`/api/admin/payment-methods/${id}/toggle`, { method: 'PATCH' }),
+};
+
+// Crypto Order API (customer)
+export const cryptoOrderAPI = {
+  create: (data: { orderId: number; paymentMethodId: number }) =>
+    fetchAPI('/api/crypto-orders', { method: 'POST', body: JSON.stringify(data) }),
+  submitHash: (id: number, txHash: string) =>
+    fetchAPI(`/api/crypto-orders/${id}/submit-hash`, { method: 'PUT', body: JSON.stringify({ txHash }) }),
+  getStatus: (id: number) => fetchAPI(`/api/crypto-orders/${id}/status`),
+};
+
+// Admin Crypto Order API
+export const adminCryptoOrderAPI = {
+  getAll: () => fetchAPI('/api/admin/crypto-orders'),
+  verify: (id: number) => fetchAPI(`/api/admin/crypto-orders/${id}/verify`, { method: 'POST' }),
+  confirm: (id: number) => fetchAPI(`/api/admin/crypto-orders/${id}/confirm`, { method: 'POST' }),
+  reject: (id: number) => fetchAPI(`/api/admin/crypto-orders/${id}/reject`, { method: 'POST' }),
+};

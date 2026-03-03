@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuthStore } from "@/stores/authStore";
-import { LayoutDashboard, Package, ClipboardList, Users, LogOut, Store, Menu } from "lucide-react";
+import AdminAuthGuard from "@/components/admin/AdminAuthGuard";
+import { LayoutDashboard, Package, ClipboardList, Users, LogOut, Store, Menu, Wallet, Bitcoin } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const navItems = [
@@ -12,6 +13,8 @@ const navItems = [
   { label: "Products", href: "/admin/products", icon: Package },
   { label: "Orders", href: "/admin/orders", icon: ClipboardList },
   { label: "Users", href: "/admin/users", icon: Users },
+  { label: "支付管理", href: "/admin/payment-methods", icon: Wallet },
+  { label: "加密訂單", href: "/admin/crypto-orders", icon: Bitcoin },
 ];
 
 function Sidebar({ pathname }: { pathname: string }) {
@@ -50,20 +53,19 @@ function Sidebar({ pathname }: { pathname: string }) {
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { user, isLoggedIn, logout } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const router = useRouter();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
 
-  useEffect(() => {
-    if (mounted && (!isLoggedIn || (user?.role !== "admin" && user?.role !== "ADMIN"))) {
-      router.push("/account/login");
-    }
-  }, [mounted, isLoggedIn, user, router]);
+  // Login page: render without sidebar or auth guard
+  if (pathname === "/admin/login") {
+    return <>{children}</>;
+  }
 
-  if (!mounted || !isLoggedIn || (user?.role !== "admin" && user?.role !== "ADMIN")) {
+  if (!mounted) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-base-200">
         <span className="loading loading-spinner loading-lg" />
@@ -72,46 +74,48 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="min-h-screen bg-base-200 flex">
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:block w-[250px] flex-shrink-0 fixed inset-y-0 left-0 z-30">
-        <Sidebar pathname={pathname} />
-      </aside>
+    <AdminAuthGuard>
+      <div className="min-h-screen bg-base-200 flex">
+        {/* Desktop Sidebar */}
+        <aside className="hidden lg:block w-[250px] flex-shrink-0 fixed inset-y-0 left-0 z-30">
+          <Sidebar pathname={pathname} />
+        </aside>
 
-      <div className="flex-1 lg:ml-[250px]">
-        {/* Top Bar */}
-        <header className="navbar bg-base-100 border-b border-base-300 sticky top-0 z-20 px-6">
-          <div className="flex-1 flex items-center gap-4">
-            <Sheet>
-              <SheetTrigger asChild>
-                <button className="btn btn-ghost btn-sm btn-square lg:hidden" aria-label="Open menu">
-                  <Menu size={20} aria-hidden="true" />
-                </button>
-              </SheetTrigger>
-              <SheetContent side="left" className="p-0 w-[250px] bg-neutral">
-                <Sidebar pathname={pathname} />
-              </SheetContent>
-            </Sheet>
-            <h2 className="text-lg font-semibold">
-              {navItems.find((item) =>
-                item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href)
-              )?.label ?? "Admin"}
-            </h2>
-          </div>
-          <div className="flex-none flex items-center gap-4">
-            <span className="text-sm text-base-content/60">{user.name}</span>
-            <button
-              onClick={() => { logout(); router.push("/account/login"); }}
-              className="btn btn-ghost btn-sm gap-2"
-            >
-              <LogOut size={16} aria-hidden="true" />
-              登出
-            </button>
-          </div>
-        </header>
+        <div className="flex-1 lg:ml-[250px]">
+          {/* Top Bar */}
+          <header className="navbar bg-base-100 border-b border-base-300 sticky top-0 z-20 px-6">
+            <div className="flex-1 flex items-center gap-4">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <button className="btn btn-ghost btn-sm btn-square lg:hidden" aria-label="Open menu">
+                    <Menu size={20} aria-hidden="true" />
+                  </button>
+                </SheetTrigger>
+                <SheetContent side="left" className="p-0 w-[250px] bg-neutral">
+                  <Sidebar pathname={pathname} />
+                </SheetContent>
+              </Sheet>
+              <h2 className="text-lg font-semibold">
+                {navItems.find((item) =>
+                  item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href)
+                )?.label ?? "Admin"}
+              </h2>
+            </div>
+            <div className="flex-none flex items-center gap-4">
+              <span className="text-sm text-base-content/60">{user?.name}</span>
+              <button
+                onClick={() => { logout(); router.push("/admin/login"); }}
+                className="btn btn-ghost btn-sm gap-2"
+              >
+                <LogOut size={16} aria-hidden="true" />
+                登出
+              </button>
+            </div>
+          </header>
 
-        <main className="p-6">{children}</main>
+          <main className="p-6">{children}</main>
+        </div>
       </div>
-    </div>
+    </AdminAuthGuard>
   );
 }
