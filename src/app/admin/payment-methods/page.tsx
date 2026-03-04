@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2, RefreshCw } from "lucide-react";
-import { adminPaymentMethodAPI } from "@/lib/api";
+import { adminPaymentMethodAPI, adminSettingsAPI } from "@/lib/api";
 import type { PaymentMethod } from "@/types";
 
 type PMForm = {
@@ -42,8 +42,14 @@ export default function AdminPaymentMethodsPage() {
   const [form, setForm] = useState<PMForm>(emptyForm);
   const [saving, setSaving] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [baseCurrency, setBaseCurrency] = useState("TWD");
 
-  useEffect(() => { fetchMethods(); }, []);
+  useEffect(() => {
+    fetchMethods();
+    adminSettingsAPI.get().then((data: any) => {
+      if (data?.baseCurrency) setBaseCurrency(data.baseCurrency);
+    }).catch(() => {});
+  }, []);
 
   const fetchMethods = async () => {
     try {
@@ -145,7 +151,7 @@ export default function AdminPaymentMethodsPage() {
                   <th>符號</th>
                   <th>網路</th>
                   <th>錢包地址</th>
-                  <th className="text-right">匯率 (TWD)</th>
+                  <th className="text-right">匯率 ({baseCurrency})</th>
                   <th>匯率來源</th>
                   <th>狀態</th>
                   <th className="text-right">操作</th>
@@ -244,7 +250,7 @@ export default function AdminPaymentMethodsPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="form-control">
-                <label className="label"><span className="label-text">匯率（1幣 = ? TWD）</span></label>
+                <label className="label"><span className="label-text">匯率（1幣 = ? {baseCurrency}）</span></label>
                 <input type="number" step="any" className="input input-bordered w-full" value={form.exchangeRate} onChange={(e) => setForm({ ...form, exchangeRate: e.target.value })} />
               </div>
               <div className="form-control">

@@ -266,3 +266,9 @@ export const adminCryptoOrderAPI = {
   confirm: (id: number) => fetchAdminAPI(`/api/admin/crypto-orders/${id}/confirm`, { method: 'POST' }),
   reject: (id: number) => fetchAdminAPI(`/api/admin/crypto-orders/${id}/reject`, { method: 'POST' }),
 };
+
+export const adminSettingsAPI = {
+  get: () => fetchAdminAPI('/api/admin/settings'),
+  update: (data: Record<string, string>) =>
+    fetchAdminAPI('/api/admin/settings', { method: 'PUT', body: JSON.stringify(data) }),
+};
