@@ -57,7 +57,7 @@ export default function CryptoPaymentPage() {
           setSubmitted(true);
           setTxHash(data.txHash);
         }
-        if (data.verifyStatus === "verified") {
+        if (data.verifyStatus === "verified" || data.verifyStatus === "manual") {
           setShowSuccess(true);
           setTimeout(() => { router.push("/account/orders"); }, 3000);
         }
@@ -160,7 +160,7 @@ export default function CryptoPaymentPage() {
               <div className="w-full">
                 <p className="text-base-content/60 text-sm">{t("payAmount")}</p>
                 <p className="text-xl font-bold" style={{ color: "#c8956c" }}>
-                  {cryptoOrder.expectedAmount} {cryptoOrder.symbol}
+                  {Number(cryptoOrder.expectedAmount).toFixed(8)} {cryptoOrder.symbol}
                 </p>
                 <span className="badge badge-outline badge-sm mt-1">{cryptoOrder.network}</span>
               </div>

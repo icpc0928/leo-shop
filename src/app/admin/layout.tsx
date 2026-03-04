@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { useAuthStore } from "@/stores/authStore";
 import AdminAuthGuard from "@/components/admin/AdminAuthGuard";
-import { LayoutDashboard, Package, ClipboardList, Users, LogOut, Store, Menu, Wallet, Bitcoin } from "lucide-react";
+import { clearAdminSession } from "@/app/admin/login/page";
+import { LayoutDashboard, Package, ClipboardList, Users, LogOut, Store, Menu, Wallet, Bitcoin, Shield } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const navItems = [
@@ -13,6 +13,7 @@ const navItems = [
   { label: "Products", href: "/admin/products", icon: Package },
   { label: "Orders", href: "/admin/orders", icon: ClipboardList },
   { label: "Users", href: "/admin/users", icon: Users },
+  { label: "管理員", href: "/admin/admin-users", icon: Shield },
   { label: "支付管理", href: "/admin/payment-methods", icon: Wallet },
   { label: "加密訂單", href: "/admin/crypto-orders", icon: Bitcoin },
 ];
@@ -53,12 +54,18 @@ function Sidebar({ pathname }: { pathname: string }) {
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { user, logout } = useAuthStore();
+  const [adminName, setAdminName] = useState<string>("");
   const router = useRouter();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+    try {
+      const raw = localStorage.getItem('leo-shop-admin-user');
+      if (raw) setAdminName(JSON.parse(raw).name || 'Admin');
+    } catch { /* ignore */ }
+  }, []);
 
   // Login page: render without sidebar or auth guard
   if (pathname === "/admin/login") {
@@ -102,9 +109,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </h2>
             </div>
             <div className="flex-none flex items-center gap-4">
-              <span className="text-sm text-base-content/60">{user?.name}</span>
+              <span className="text-sm text-base-content/60">{adminName}</span>
               <button
-                onClick={() => { logout(); router.push("/admin/login"); }}
+                onClick={() => { clearAdminSession(); router.push("/admin/login"); }}
                 className="btn btn-ghost btn-sm gap-2"
               >
                 <LogOut size={16} aria-hidden="true" />

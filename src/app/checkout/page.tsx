@@ -6,8 +6,9 @@ import Link from "next/link";
 import Container from "@/components/ui/Container";
 import Breadcrumb from "@/components/layout/Breadcrumb";
 import { useCartStore } from "@/stores/cartStore";
+import { useAuthStore } from "@/stores/authStore";
 import { orderAPI, cryptoPaymentAPI, paymentMethodAPI, cryptoOrderAPI } from "@/lib/api";
-import { formatPrice } from "@/lib/utils";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Check, Store, ShoppingBag, Bitcoin, Coins } from "lucide-react";
@@ -22,6 +23,7 @@ const initialForm: ShippingForm = { name: "", email: "", phone: "", city: "", di
 
 export default function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCartStore();
+  const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<ShippingForm>(initialForm);
@@ -33,10 +35,19 @@ export default function CheckoutPage() {
   const [orderError, setOrderError] = useState("");
   const [selectedCryptoMethodId, setSelectedCryptoMethodId] = useState<number | null>(null);
   const [cryptoMethods, setCryptoMethods] = useState<PaymentMethod[]>([]);
+  const [shipping, setShipping] = useState(0);
   const router = useRouter();
+  const { currency, formatPrice, formatPriceTWD } = useCurrency();
   const t = useTranslations("checkout");
 
   useEffect(() => { setMounted(true); }, []);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (mounted && !isLoggedIn) {
+      router.push("/account/login?redirect=/checkout");
+    }
+  }, [mounted, isLoggedIn, router]);
 
   // Fetch enabled payment methods
   useEffect(() => {
@@ -53,9 +64,28 @@ export default function CheckoutPage() {
     })();
   }, [mounted]);
 
+  // Fetch shipping fee from backend
+  useEffect(() => {
+    if (!mounted) return;
+    const subtotal = totalPrice();
+    if (subtotal <= 0) return;
+    (async () => {
+      try {
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+        const res = await fetch(`${API_BASE}/api/orders/shipping-fee?subtotal=${subtotal}`);
+        if (res.ok) {
+          const data = await res.json();
+          setShipping(Number(data.shippingFee));
+        }
+      } catch {
+        // Fallback: match backend logic
+        setShipping(subtotal >= 2000 ? 0 : 100);
+      }
+    })();
+  }, [mounted, items]);
+
   if (!mounted) return null;
 
-  const shipping = totalPrice() >= 2000 ? 0 : 120;
   const total = totalPrice() + shipping;
 
   if (items.length === 0 && !orderComplete) {
@@ -332,6 +362,18 @@ export default function CheckoutPage() {
                     {paymentOptions.find((o) => o.id === paymentMethod)?.label}
                     {paymentMethod === "crypto" && selectedCryptoMethod && ` (${selectedCryptoMethod.symbol} - ${selectedCryptoMethod.network})`}
                   </p>
+                  {paymentMethod === "crypto" && selectedCryptoMethod && selectedCryptoMethod.exchangeRate > 0 && (
+                    <div className="mt-3 p-3 bg-base-100 rounded-lg">
+                      <p className="text-xs text-base-content/50 mb-1">預估支付金額</p>
+                      <p className="text-lg font-bold text-primary">
+                        {(total / selectedCryptoMethod.exchangeRate).toFixed(8)} {selectedCryptoMethod.symbol}
+                      </p>
+                      <p className="text-xs text-base-content/40 mt-1">
+                        匯率：1 {selectedCryptoMethod.symbol} ≈ {Number(selectedCryptoMethod.exchangeRate).toLocaleString()} TWD
+                      </p>
+                      <p className="text-xs text-base-content/40">※ 實際金額以送出訂單時匯率為準</p>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="card bg-base-200 mb-4">
@@ -382,7 +424,15 @@ export default function CheckoutPage() {
                 <div className="flex justify-between"><span className="text-base-content/60">小計</span><span>{formatPrice(totalPrice())}</span></div>
                 <div className="flex justify-between"><span className="text-base-content/60">運費</span><span>{shipping === 0 ? "免運" : formatPrice(shipping)}</span></div>
                 <div className="divider my-0" />
-                <div className="flex justify-between font-medium text-base"><span>合計</span><span>{formatPrice(total)}</span></div>
+                <div className="flex justify-between font-medium text-base">
+                  <span>合計</span>
+                  <span>
+                    {formatPrice(total)}
+                    {currency !== "TWD" && (
+                      <span className="text-xs text-base-content/50 ml-1">(≈ {formatPriceTWD(total)})</span>
+                    )}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

@@ -265,6 +265,10 @@
     "payment": "付款方式",
     "copyright": "© {year} Leo Shop. All rights reserved."
   },
+  "currency": {
+    "label": "幣別",
+    "switchCurrency": "切換幣別"
+  },
   "breadcrumb": {
     "home": "首頁"
   },

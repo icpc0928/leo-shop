@@ -6,13 +6,14 @@ import Link from "next/link";
 import Container from "@/components/ui/Container";
 import Breadcrumb from "@/components/layout/Breadcrumb";
 import { useCartStore } from "@/stores/cartStore";
-import { formatPrice } from "@/lib/utils";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import { useTranslations } from "next-intl";
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, clearCart, totalPrice } = useCartStore();
   const [mounted, setMounted] = useState(false);
+  const { formatPrice } = useCurrency();
   const t = useTranslations("cart");
 
   useEffect(() => {

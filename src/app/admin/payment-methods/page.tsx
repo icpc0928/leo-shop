@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCw } from "lucide-react";
 import { adminPaymentMethodAPI } from "@/lib/api";
 import type { PaymentMethod } from "@/types";
 
@@ -27,7 +27,8 @@ function toForm(p: PaymentMethod): PMForm {
   };
 }
 
-function truncate(s: string, len: number) {
+function truncate(s: string | null | undefined, len: number) {
+  if (!s) return "";
   return s.length > len ? s.slice(0, len) + "…" : s;
 }
 
@@ -40,6 +41,7 @@ export default function AdminPaymentMethodsPage() {
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [form, setForm] = useState<PMForm>(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => { fetchMethods(); }, []);
 
@@ -102,6 +104,18 @@ export default function AdminPaymentMethodsPage() {
     setDeletingId(null);
   };
 
+  const handleRefreshRates = async () => {
+    setRefreshing(true);
+    try {
+      await adminPaymentMethodAPI.refreshRates();
+      await fetchMethods(); // Re-fetch to show updated rates
+    } catch {
+      console.warn("Refresh rates failed");
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   if (loading) {
     return <div className="flex justify-center py-20"><span className="loading loading-spinner loading-lg" /></div>;
   }
@@ -110,9 +124,15 @@ export default function AdminPaymentMethodsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">支付管理</h1>
-        <button onClick={openAdd} className="btn btn-primary btn-sm gap-2">
-          <Plus size={16} /> 新增幣種
-        </button>
+        <div className="flex gap-2">
+          <button onClick={handleRefreshRates} disabled={refreshing} className="btn btn-outline btn-sm gap-2">
+            <RefreshCw size={16} className={refreshing ? "animate-spin" : ""} /> 
+            {refreshing ? "更新中..." : "刷新匯率"}
+          </button>
+          <button onClick={openAdd} className="btn btn-primary btn-sm gap-2">
+            <Plus size={16} /> 新增幣種
+          </button>
+        </div>
       </div>
 
       <div className="card bg-base-100 shadow-sm">
@@ -126,13 +146,14 @@ export default function AdminPaymentMethodsPage() {
                   <th>網路</th>
                   <th>錢包地址</th>
                   <th className="text-right">匯率 (TWD)</th>
+                  <th>匯率來源</th>
                   <th>狀態</th>
                   <th className="text-right">操作</th>
                 </tr>
               </thead>
               <tbody>
                 {methods.length === 0 && (
-                  <tr><td colSpan={7} className="text-center text-base-content/50 py-8">尚無幣種設定</td></tr>
+                  <tr><td colSpan={8} className="text-center text-base-content/50 py-8">尚無幣種設定</td></tr>
                 )}
                 {methods.map((m) => (
                   <tr key={m.id}>
@@ -142,12 +163,19 @@ export default function AdminPaymentMethodsPage() {
                     <td className="font-mono text-xs">{truncate(m.walletAddress, 16)}</td>
                     <td className="text-right tabular-nums">{m.exchangeRate}</td>
                     <td>
-                      <input
-                        type="checkbox"
-                        className="toggle toggle-sm toggle-success"
-                        checked={m.enabled}
-                        onChange={() => handleToggle(m.id)}
-                      />
+                      <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
+                        m.rateSource === 'api' ? 'bg-blue-50 text-blue-600' : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        {m.rateSource === 'api' ? 'API' : '手動'}
+                      </span>
+                    </td>
+                    <td>
+                      <button
+                        onClick={() => handleToggle(m.id)}
+                        className={`btn btn-xs ${m.enabled ? 'btn-success' : 'btn-ghost border-base-300'}`}
+                      >
+                        {m.enabled ? '啟用' : '停用'}
+                      </button>
                     </td>
                     <td className="text-right">
                       <div className="flex items-center justify-end gap-1">

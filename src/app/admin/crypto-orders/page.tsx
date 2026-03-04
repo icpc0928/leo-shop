@@ -5,11 +5,11 @@ import { adminCryptoOrderAPI } from "@/lib/api";
 import type { CryptoOrder } from "@/types";
 import { ExternalLink } from "lucide-react";
 
-const statusConfig: Record<string, { label: string; class: string }> = {
-  pending: { label: "待驗證", class: "badge-warning" },
-  verified: { label: "已驗證", class: "badge-success" },
-  failed: { label: "失敗", class: "badge-error" },
-  manual: { label: "人工處理", class: "badge-info" },
+const statusConfig: Record<string, { label: string; bg: string; text: string }> = {
+  pending:  { label: "待驗證", bg: "bg-amber-50",  text: "text-amber-600" },
+  verified: { label: "已驗證", bg: "bg-emerald-50", text: "text-emerald-600" },
+  failed:   { label: "失敗",   bg: "bg-red-50",     text: "text-red-500" },
+  manual:   { label: "已確認", bg: "bg-blue-50",    text: "text-blue-600" },
 };
 
 export default function AdminCryptoOrdersPage() {
@@ -56,55 +56,75 @@ export default function AdminCryptoOrdersPage() {
           <div className="overflow-x-auto">
             <table className="table">
               <thead>
-                <tr>
+                <tr className="text-base-content/60 text-xs uppercase tracking-wider">
                   <th>訂單 ID</th>
                   <th>幣種</th>
                   <th className="text-right">應付金額</th>
                   <th>TX Hash</th>
-                  <th>狀態</th>
+                  <th className="text-center">狀態</th>
                   <th>時間</th>
                   <th className="text-right">操作</th>
                 </tr>
               </thead>
               <tbody>
                 {orders.length === 0 && (
-                  <tr><td colSpan={7} className="text-center text-base-content/50 py-8">尚無加密訂單</td></tr>
+                  <tr><td colSpan={7} className="text-center text-base-content/40 py-16">尚無加密訂單</td></tr>
                 )}
                 {orders.map((order) => {
                   const status = statusConfig[order.verifyStatus] || statusConfig.pending;
                   const txUrl = getTxUrl(order);
+
                   return (
-                    <tr key={order.id}>
-                      <td className="font-mono text-sm">#{order.orderId}</td>
-                      <td>{order.symbol} <span className="text-xs text-base-content/50">({order.network})</span></td>
-                      <td className="text-right tabular-nums">{order.expectedAmount}</td>
-                      <td className="font-mono text-xs max-w-[150px] truncate">
+                    <tr key={order.id} className="hover:bg-base-200/50 transition-colors">
+                      <td className="font-mono text-sm text-base-content/70">#{order.orderId}</td>
+                      <td>
+                        <span className="font-medium">{order.symbol}</span>
+                        <span className="text-xs text-base-content/40 ml-1">({order.network})</span>
+                      </td>
+                      <td className="text-right tabular-nums font-medium">{order.expectedAmount}</td>
+                      <td className="font-mono text-xs">
                         {order.txHash ? (
                           txUrl ? (
-                            <a href={txUrl} target="_blank" rel="noopener noreferrer" className="link link-primary inline-flex items-center gap-1">
-                              {order.txHash.slice(0, 10)}…
-                              <ExternalLink size={12} />
+                            <a href={txUrl} target="_blank" rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-primary hover:underline">
+                              {order.txHash.slice(0, 12)}…
+                              <ExternalLink size={11} />
                             </a>
                           ) : (
-                            <span>{order.txHash.slice(0, 16)}…</span>
+                            <span className="text-base-content/60">{order.txHash.slice(0, 16)}…</span>
                           )
                         ) : (
-                          <span className="text-base-content/30">—</span>
+                          <span className="text-base-content/25">—</span>
                         )}
                       </td>
-                      <td><span className={`badge ${status.class} badge-sm`}>{status.label}</span></td>
+                      <td className="text-center">
+                        <span className={`inline-block min-w-[72px] px-3 py-1.5 rounded-full text-xs font-medium ${status.bg} ${status.text}`}>
+                          {status.label}
+                        </span>
+                      </td>
                       <td className="text-xs text-base-content/50">
                         {order.createdAt ? new Date(order.createdAt).toLocaleString("zh-TW") : "—"}
                       </td>
                       <td className="text-right">
-                        <div className="flex items-center justify-end gap-1">
+                        <div className="flex items-center justify-end gap-1.5">
                           {order.verifyStatus === "pending" && order.txHash && (
-                            <button onClick={() => handleAction(order.id, "verify")} className="btn btn-outline btn-xs">驗證</button>
+                            <button onClick={() => handleAction(order.id, "verify")}
+                              className="px-3 py-1.5 rounded-full text-xs font-medium bg-base-200 text-base-content/70 hover:bg-base-300 transition-colors">
+                              驗證
+                            </button>
                           )}
-                          {(order.verifyStatus === "pending" || order.verifyStatus === "manual") && (
+                          {order.verifyStatus !== "verified" && (
                             <>
-                              <button onClick={() => handleAction(order.id, "confirm")} className="btn btn-success btn-xs">確認</button>
-                              <button onClick={() => handleAction(order.id, "reject")} className="btn btn-error btn-xs">拒絕</button>
+                              <button onClick={() => handleAction(order.id, "confirm")}
+                                className="px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors">
+                                {order.verifyStatus === "failed" ? "重新確認" : "確認"}
+                              </button>
+                              {order.verifyStatus !== "failed" && (
+                                <button onClick={() => handleAction(order.id, "reject")}
+                                  className="px-3 py-1.5 rounded-full text-xs font-medium bg-red-50 text-red-500 hover:bg-red-100 transition-colors">
+                                  拒絕
+                                </button>
+                              )}
                             </>
                           )}
                         </div>

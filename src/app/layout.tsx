@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import LayoutWrapper from "@/components/layout/LayoutWrapper";
 import IntlProvider from "@/components/providers/IntlProvider";
 import ThemeProvider from "@/components/providers/ThemeProvider";
+import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import "./globals.css";
 
 const inter = Inter({
@@ -35,7 +36,9 @@ export default function RootLayout({
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
         <ThemeProvider />
         <IntlProvider>
-          <LayoutWrapper>{children}</LayoutWrapper>
+          <CurrencyProvider>
+            <LayoutWrapper>{children}</LayoutWrapper>
+          </CurrencyProvider>
         </IntlProvider>
       </body>
     </html>

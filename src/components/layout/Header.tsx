@@ -9,17 +9,36 @@ import { useCartStore } from "@/stores/cartStore";
 import { useAuthStore } from "@/stores/authStore";
 import { useLocaleStore } from "@/stores/localeStore";
 import { useTranslations } from "next-intl";
-import { ShoppingBag, Search, Menu, X, Globe, User } from "lucide-react";
+import { ShoppingBag, Search, Menu, X, Globe, User, ChevronDown } from "lucide-react";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 const navKeys = ["home", "products", "about", "contact", "faq"] as const;
 const navHrefs = ["/", "/products", "/about", "/contact", "/faq"];
 
+const CURRENCY_OPTIONS = [
+  { code: "TWD", flag: "🇹🇼" },
+  { code: "USD", flag: "🇺🇸" },
+  { code: "JPY", flag: "🇯🇵" },
+  { code: "EUR", flag: "🇪🇺" },
+  { code: "GBP", flag: "🇬🇧" },
+  { code: "CNY", flag: "🇨🇳" },
+  { code: "KRW", flag: "🇰🇷" },
+  { code: "THB", flag: "🇹🇭" },
+  { code: "VND", flag: "🇻🇳" },
+  { code: "SGD", flag: "🇸🇬" },
+  { code: "HKD", flag: "🇭🇰" },
+];
+
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const totalItems = useCartStore((s) => s.totalItems);
+  const cartCount = useCartStore((s) =>
+    s.items.reduce((sum, item) => sum + item.quantity, 0)
+  );
   const { user, isLoggedIn, logout } = useAuthStore();
   const [mounted, setMounted] = useState(false);
+  const [cartBounce, setCartBounce] = useState(false);
   const { locale, setLocale } = useLocaleStore();
+  const { currency, setCurrency } = useCurrency();
   const t = useTranslations();
   const router = useRouter();
 
@@ -27,7 +46,16 @@ export default function Header() {
     setMounted(true);
   }, []);
 
-  const cartCount = mounted ? totalItems() : 0;
+  // Bounce animation when cart count changes
+  useEffect(() => {
+    if (mounted && cartCount > 0) {
+      setCartBounce(true);
+      const timer = setTimeout(() => setCartBounce(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [cartCount, mounted]);
+
+  const displayCount = mounted ? cartCount : 0;
 
   const toggleLocale = () => {
     setLocale(locale === "zh-TW" ? "en" : "zh-TW");
@@ -77,6 +105,32 @@ export default function Header() {
                 <span className="hidden sm:inline text-xs tracking-wider">{locale === "zh-TW" ? "EN" : "中"}</span>
               </button>
 
+              {/* Currency */}
+              <div className="dropdown dropdown-end">
+                <button tabIndex={0} className="btn btn-ghost btn-sm gap-1" aria-label="Switch currency">
+                  <span className="text-xs tracking-wider">
+                    {CURRENCY_OPTIONS.find((c) => c.code === currency)?.flag} {currency}
+                  </span>
+                  <ChevronDown className="w-3 h-3" strokeWidth={1.5} aria-hidden="true" />
+                </button>
+                <ul tabIndex={0} className="dropdown-content menu bg-base-200 rounded-box z-[100] w-36 p-2 shadow-lg max-h-64 overflow-y-auto">
+                  {CURRENCY_OPTIONS.map((opt) => (
+                    <li key={opt.code}>
+                      <button
+                        className={currency === opt.code ? "active" : ""}
+                        onClick={() => {
+                          setCurrency(opt.code);
+                          // blur to close dropdown
+                          (document.activeElement as HTMLElement)?.blur();
+                        }}
+                      >
+                        {opt.flag} {opt.code}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
               {/* Theme */}
               <ThemeSwitcher />
 
@@ -115,9 +169,13 @@ export default function Header() {
               {/* Cart */}
               <Link href="/cart" className="btn btn-ghost btn-sm btn-square relative" aria-label="Cart">
                 <ShoppingBag className="w-5 h-5" strokeWidth={1.5} aria-hidden="true" />
-                {cartCount > 0 && (
-                  <span className="badge badge-primary badge-sm absolute -top-1 -right-1 text-[10px]">
-                    {cartCount}
+                {displayCount > 0 && (
+                  <span
+                    className={`absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-[18px] h-[18px] rounded-full bg-primary text-primary-content text-[10px] font-bold leading-none px-1 shadow-sm transition-transform ${
+                      cartBounce ? "animate-[cart-bounce_0.3s_ease]" : ""
+                    }`}
+                  >
+                    {displayCount > 99 ? "99+" : displayCount}
                   </span>
                 )}
               </Link>

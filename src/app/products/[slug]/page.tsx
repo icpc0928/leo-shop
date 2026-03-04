@@ -8,7 +8,7 @@ import Button from "@/components/ui/CustomButton";
 import ProductGrid from "@/components/product/ProductGrid";
 import { mockProducts } from "@/lib/mockData";
 import { productAPI } from "@/lib/api";
-import { formatPrice } from "@/lib/utils";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import { useCartStore } from "@/stores/cartStore";
 import { useTranslations } from "next-intl";
 import { notFound } from "next/navigation";
@@ -34,6 +34,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   const [related, setRelated] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFoundState, setNotFoundState] = useState(false);
+  const { formatPrice } = useCurrency();
   const t = useTranslations("product");
 
   useEffect(() => {

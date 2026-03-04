@@ -265,6 +265,10 @@
     "payment": "PAYMENT METHODS",
     "copyright": "© {year} Leo Shop. All rights reserved."
   },
+  "currency": {
+    "label": "Currency",
+    "switchCurrency": "Switch Currency"
+  },
   "breadcrumb": {
     "home": "Home"
   },

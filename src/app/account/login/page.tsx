@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import { useAuthStore } from "@/stores/authStore";
@@ -10,6 +10,8 @@ import { useTranslations } from "next-intl";
 export default function LoginPage() {
   const t = useTranslations("account");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/account";
   const login = useAuthStore((s) => s.login);
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
 
@@ -20,8 +22,13 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push(redirectTo);
+    }
+  }, [isLoggedIn, redirectTo, router]);
+
   if (isLoggedIn) {
-    router.push("/account");
     return null;
   }
 
@@ -42,7 +49,7 @@ export default function LoginPage() {
     const result = await login(email, password);
     setLoading(false);
     if (result.success) {
-      router.push("/account");
+      router.push(redirectTo);
     } else {
       setApiError(result.error || "Login failed");
     }

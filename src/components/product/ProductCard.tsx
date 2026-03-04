@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Product } from "@/types";
-import { formatPrice } from "@/lib/utils";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import { useCartStore } from "@/stores/cartStore";
 import { ShoppingBag } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -14,6 +14,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const addItem = useCartStore((s) => s.addItem);
+  const { formatPrice } = useCurrency();
   const t = useTranslations("product");
 
   const discount =

@@ -179,6 +179,29 @@
 - [x] DataInitializer 預設幣種（BTC/USDT TRC-20/ETH，預設 disabled）
 - [x] `./gradlew compileJava` 通過 ✅
 
+#### 5.0.6 多幣別顯示 ✅
+- [x] ExchangeRate Entity + Repository（exchange_rates 表）
+- [x] ExchangeRateService（getAllRates / updateRate / refreshRates from open.er-api.com）
+- [x] ExchangeRateController（GET /api/exchange-rates → public map）
+- [x] AdminExchangeRateController（GET list / PUT update / POST refresh）
+- [x] SecurityConfig 更新（exchange-rates permitAll）
+- [x] DataInitializer 預設 10 種匯率（USD/JPY/EUR/GBP/CNY/KRW/THB/VND/SGD/HKD）
+- [x] CurrencyContext（`src/contexts/CurrencyContext.tsx`）— 全域幣別狀態 + 匯率表
+  - localStorage 持久化
+  - navigator.language 自動偵測幣別
+  - convertPrice / formatPrice / formatPriceTWD
+- [x] layout.tsx 包裹 CurrencyProvider
+- [x] Header 幣別切換器（DaisyUI dropdown，11 種幣別 + 國旗 emoji）
+- [x] ProductCard 價格顯示改用 CurrencyContext formatPrice
+- [x] 商品詳情頁價格顯示改用 CurrencyContext formatPrice
+- [x] 購物車頁面價格顯示改用 CurrencyContext formatPrice
+- [x] 結帳頁面雙幣別顯示（目標幣別 + ≈ NT$ 基礎金額）
+- [x] API Client 新增 exchangeRateAPI / adminExchangeRateAPI
+- [x] i18n 中英文翻譯（currency namespace）
+- [x] Admin 頁面保持顯示基礎幣別 TWD（不受影響）
+- [x] 後端 `./gradlew compileJava` 通過 ✅
+- [x] 前端 `npm run build` 通過 ✅
+
 #### 5.1 錢包系統
 - [ ] Wallet Entity（userId, balance, currency=USD）
 - [ ] Transaction Entity（type: TOPUP/PURCHASE/REFUND, amount, status, reference）
@@ -207,6 +230,21 @@
 - [x] 側邊欄新增「支付管理」「加密訂單」導航項
 - [x] 登出跳轉 `/admin/login`
 - [x] LayoutWrapper 確認 `/admin/*` 不顯示前台 Header/Footer
+
+#### 5.1.8 Admin 帳號分離（admin_users 表）✅
+- [x] AdminUser Entity（`admin_users` 表，獨立於 `users`）
+- [x] AdminUserRepository（findByEmail）
+- [x] AdminAuthService（驗證 admin_users + BCrypt + JWT with userType=admin claim）
+- [x] AdminAuthController（POST /api/admin/auth/login）
+- [x] JwtUtil 更新（generateAdminToken + getUserTypeFromToken + user token 加 userType=user）
+- [x] SecurityConfig 更新（/api/admin/auth/** permitAll）
+- [x] DataInitializer 更新（admin_users 表建預設管理員，不再寫入 users 表）
+- [x] 前端 api.ts：新增 fetchAdminAPI（使用 leo-shop-admin-token）、adminAuthAPI
+- [x] 所有 admin API 改用 fetchAdminAPI（adminProductAPI、adminOrderAPI、adminDashboardAPI、adminPaymentMethodAPI、adminCryptoOrderAPI、uploadAPI）
+- [x] Admin 登入頁改用 adminAuthAPI.login，token 存 leo-shop-admin-token
+- [x] AdminAuthGuard 改用 admin token 驗證
+- [x] Admin Layout 登出清除 admin session
+- [x] 前後端 build 通過 ✅
 
 #### 5.1.7 加密貨幣直接轉帳前端 ✅
 - [x] API Client 更新（paymentMethodAPI、adminPaymentMethodAPI、cryptoOrderAPI、adminCryptoOrderAPI）
@@ -260,3 +298,19 @@
 | 2026-02-11 | 虛擬幣串接用 NOWPayments | 支援 200+ 幣種、API 簡單、手續費 0.5%、免 KYC |
 | 2026-02-11 | 加入錢包儲值系統 | 用戶可儲值後用餘額消費，支援虛擬幣 + 傳統方式儲值 |
 | 2026-02-11 | 主題從「溫暖簡約」切換為「自然清新」 | 色系從金棕色 #c8956c 改為綠色系 #22c55e，字體從 Playfair Display+Inter 改為 Lora+Nunito，整體風格更清新自然 |
+| 2026-03-03 | 加密訂單頁面 UI 優化 | 狀態 badge 加圖示、按鈕改 icon+文字、失敗狀態改「重新確認」、拒絕按鈕改 outline 風格 |
+| 2026-03-03 | 購物車氣泡即時更新+美化 | 修正 zustand selector 訂閱 items 而非 method ref，氣泡改自訂圓形+bounce 動畫 |
+| 2026-03-04 | 多幣別匯率 API（CoinGecko 自動更新） | PaymentMethod 新增 `refreshRates()` API，呼叫 CoinGecko API 自動更新加密貨幣匯率（BTC/ETH/USDT） |
+| 2026-03-04 | Admin 加密訂單 UI 優化（Polygonscan 風格） | 參考 Polygonscan，狀態顯示優化、按鈕樣式調整、色彩對比提升 |
+| 2026-03-04 | Admin 管理員管理頁面（CRUD） | 新增 `/admin/admin-users` 頁面，支援管理員列表、新增、編輯、刪除（admin_users 表） |
+| 2026-03-04 | Admin 支付管理「匯率來源」欄位 + 刷新匯率按鈕 | PaymentMethod 列表加入 `rateSource`（CoinGecko）欄位顯示，頁面右上角新增「刷新匯率」按鈕 |
+| 2026-03-04 | 購物車氣泡即時更新修復 | 修正 zustand selector 訂閱問題，購物車數量變動即時反映於 Header badge |
+| 2026-03-04 | 結帳流程：未登入跳轉登入頁（redirect 回結帳） | Checkout 頁面加入 `isAuthenticated` 檢查，未登入自動跳轉 `/login?redirect=/checkout` |
+| 2026-03-04 | 結帳運費改為從後端 API 取得 | 呼叫 `GET /api/orders/shipping-fee?subtotal=xxx`，根據小計動態計算運費（>=1000 免運） |
+| 2026-03-04 | 加密付款頁面 BTC 顯示 8 位小數 | formatCryptoAmount() 改為 BTC 顯示 8 位、其他幣種 6 位小數 |
+| 2026-03-04 | 確認訂單頁顯示預估加密貨幣金額 | Order summary 顯示「≈ 0.00123456 BTC」預估金額（根據即時匯率） |
+| 2026-03-04 | TronVerifier Base58/Hex 地址轉換修復 | 修正 Base58.decode() 異常處理、Hex 地址轉換邏輯，確保 USDT TRC-20 驗證正確 |
+| 2026-03-04 | truncate null 修復 | 修正 truncateAddress() 函數 null pointer 問題，加入防禦性檢查 |
+| 2026-03-04 | toggle 改按鈕 | Admin 幣種管理「啟用/停用」從 checkbox 改為 DaisyUI toggle button |
+| 2026-03-04 | CORS PATCH 方法支援 | 後端 SecurityConfig 加入 `PATCH` 到 allowedMethods，前端可用 PATCH 做局部更新 |
+| 2026-03-04 | PostgreSQL constraint 修復 | 修正 `admin_users` 表 unique constraint 衝突問題，調整 migration script |

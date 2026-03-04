@@ -2,8 +2,30 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/stores/authStore";
+import { adminAuthAPI, setAdminToken, getAdminToken, removeAdminToken } from "@/lib/api";
 import { Lock, Mail, AlertCircle } from "lucide-react";
+
+interface AdminInfo {
+  name: string;
+  email: string;
+  role: string;
+}
+
+function getStoredAdmin(): AdminInfo | null {
+  if (typeof window === 'undefined') return null;
+  const raw = localStorage.getItem('leo-shop-admin-user');
+  if (!raw) return null;
+  try { return JSON.parse(raw); } catch { return null; }
+}
+
+function setStoredAdmin(admin: AdminInfo): void {
+  localStorage.setItem('leo-shop-admin-user', JSON.stringify(admin));
+}
+
+export function clearAdminSession(): void {
+  removeAdminToken();
+  if (typeof window !== 'undefined') localStorage.removeItem('leo-shop-admin-user');
+}
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -11,16 +33,15 @@ export default function AdminLoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const { login, isLoggedIn, user } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
-    if (mounted && isLoggedIn && (user?.role === "admin" || user?.role === "ADMIN")) {
+    if (mounted && getAdminToken() && getStoredAdmin()) {
       router.push("/admin");
     }
-  }, [mounted, isLoggedIn, user, router]);
+  }, [mounted, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,25 +49,13 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const result = await login(email, password);
-      if (!result.success) {
-        setError(result.error || "登入失敗");
-        setLoading(false);
-        return;
-      }
-
-      // Check role after login
-      const state = useAuthStore.getState();
-      if (state.user?.role !== "admin" && state.user?.role !== "ADMIN") {
-        setError("無管理員權限，此帳號不是管理員。");
-        useAuthStore.getState().logout();
-        setLoading(false);
-        return;
-      }
-
+      const res = await adminAuthAPI.login({ email, password });
+      setAdminToken(res.token);
+      setStoredAdmin({ name: res.name, email: res.email, role: res.role });
       router.push("/admin");
-    } catch {
-      setError("登入失敗，請稍後再試");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "登入失敗";
+      setError(message);
       setLoading(false);
     }
   };
