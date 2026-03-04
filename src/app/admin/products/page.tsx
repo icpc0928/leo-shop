@@ -205,7 +205,13 @@ export default function AdminProducts() {
                     <td className="text-base-content/50">{product.category}</td>
                     <td className="text-right tabular-nums">{formatCurrency(product.price)}</td>
                     <td className="text-right">{product.stock}</td>
-                    <td><span className={`badge ${product.active !== false ? "badge-success" : "badge-error"} badge-sm`}>{product.active !== false ? "Active" : "Inactive"}</span></td>
+                    <td>
+                      <span className={`inline-block min-w-[60px] px-3 py-1.5 rounded-full text-xs font-medium text-center ${
+                        product.active !== false ? "bg-emerald-50 text-emerald-600" : "bg-gray-100 text-gray-500"
+                      }`}>
+                        {product.active !== false ? "上架" : "下架"}
+                      </span>
+                    </td>
                     <td className="text-right">
                       <div className="flex items-center justify-end gap-1">
                         <button onClick={() => openEdit(product)} className="btn btn-ghost btn-xs btn-square" aria-label="Edit product">

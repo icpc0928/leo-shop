@@ -43,6 +43,7 @@ export interface Order {
   shippingEmail?: string;
   shippingAddress?: string;
   paymentMethod?: string;
+  cryptoPaymentId?: string;
   note?: string;
   items: OrderItem[];
   createdAt?: string;
@@ -106,6 +107,7 @@ export interface PaymentMethod {
 export interface CryptoOrder {
   id: number;
   orderId: number;
+  orderNumber?: string;
   paymentMethodId: number;
   symbol: string;
   network: string;
@@ -115,6 +117,7 @@ export interface CryptoOrder {
   txHash?: string;
   verifyStatus: "pending" | "verified" | "failed" | "manual";
   verifyMessage?: string;
+  contractAddress?: string;
   explorerUrl?: string;
   createdAt?: string;
   paidAt?: string;

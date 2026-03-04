@@ -172,7 +172,9 @@ export default function AdminPaymentMethodsPage() {
                     <td>
                       <button
                         onClick={() => handleToggle(m.id)}
-                        className={`btn btn-xs ${m.enabled ? 'btn-success' : 'btn-ghost border-base-300'}`}
+                        className={`inline-block min-w-[60px] px-3 py-1.5 rounded-full text-xs font-medium text-center cursor-pointer transition-colors ${
+                          m.enabled ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                        }`}
                       >
                         {m.enabled ? '啟用' : '停用'}
                       </button>
@@ -216,7 +218,13 @@ export default function AdminPaymentMethodsPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="form-control">
                 <label className="label"><span className="label-text">網路</span></label>
-                <input className="input input-bordered w-full" value={form.network} onChange={(e) => setForm({ ...form, network: e.target.value })} placeholder="polygon" />
+                <select className="select select-bordered w-full" value={form.network} onChange={(e) => setForm({ ...form, network: e.target.value })}>
+                  <option value="">請選擇網路</option>
+                  <option value="bitcoin">Bitcoin</option>
+                  <option value="ethereum">Ethereum</option>
+                  <option value="tron">Tron (TRC-20)</option>
+                  <option value="polygon">Polygon</option>
+                </select>
               </div>
               <div className="form-control">
                 <label className="label"><span className="label-text">Gateway</span></label>

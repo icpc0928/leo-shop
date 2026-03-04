@@ -11,6 +11,80 @@ import { useTranslations } from "next-intl";
 import { Copy, Check, Clock, AlertTriangle, CheckCircle2, Loader2, Send } from "lucide-react";
 import type { CryptoPayment, CryptoOrder } from "@/types";
 
+/**
+ * Build a cryptocurrency payment URI with amount for QR code
+ * Standards: BIP-21 (Bitcoin), EIP-681 (Ethereum/ERC-20), TIP (Tron)
+ */
+/**
+ * Convert token amount to smallest unit (wei/sun) based on decimals
+ * Most ERC-20/TRC-20 tokens use 18 decimals, USDT/USDC use 6
+ */
+function toSmallestUnit(amount: string | number, decimals: number): string {
+  const parts = String(amount).split(".");
+  const whole = parts[0] || "0";
+  const frac = (parts[1] || "").padEnd(decimals, "0").slice(0, decimals);
+  const raw = whole + frac;
+  // Remove leading zeros
+  return raw.replace(/^0+/, "") || "0";
+}
+
+function getTokenDecimals(symbol?: string): number {
+  const s = symbol?.toUpperCase();
+  if (s === "USDT" || s === "USDC") return 6;
+  return 18; // ETH, TRX, most ERC-20/TRC-20
+}
+
+function buildPaymentUri(order: CryptoOrder): string {
+  const { network, walletAddress, expectedAmount, symbol, contractAddress } = order;
+  const amount = String(expectedAmount);
+  const net = network?.toLowerCase();
+  const hasContract = contractAddress && contractAddress.trim().length > 0;
+
+  // Bitcoin — BIP-21
+  if (net === "bitcoin") {
+    return `bitcoin:${walletAddress}?amount=${amount}`;
+  }
+
+  // Ethereum
+  if (net === "ethereum") {
+    if (hasContract) {
+      // ERC-20: ethereum:contractAddr/transfer?address=wallet&uint256=amountInSmallestUnit
+      const decimals = getTokenDecimals(symbol);
+      const uint256 = toSmallestUnit(amount, decimals);
+      return `ethereum:${contractAddress}/transfer?address=${walletAddress}&uint256=${uint256}`;
+    }
+    // Native ETH (EIP-681): value in wei
+    const weiValue = toSmallestUnit(amount, 18);
+    return `ethereum:${walletAddress}?value=${weiValue}`;
+  }
+
+  // Polygon (EIP-681 with chainId=137)
+  if (net === "polygon") {
+    if (hasContract) {
+      const decimals = getTokenDecimals(symbol);
+      const uint256 = toSmallestUnit(amount, decimals);
+      return `ethereum:${contractAddress}@137/transfer?address=${walletAddress}&uint256=${uint256}`;
+    }
+    const weiValue = toSmallestUnit(amount, 18);
+    return `ethereum:${walletAddress}@137?value=${weiValue}`;
+  }
+
+  // Tron
+  if (net === "tron") {
+    if (hasContract) {
+      // TRC-20: tron:contractAddr/transfer?address=wallet&uint256=amount
+      const decimals = getTokenDecimals(symbol);
+      const uint256 = toSmallestUnit(amount, decimals);
+      return `tron:${contractAddress}/transfer?address=${walletAddress}&uint256=${uint256}`;
+    }
+    // Native TRX
+    return `tron:${walletAddress}?amount=${amount}`;
+  }
+
+  // Fallback
+  return walletAddress;
+}
+
 const STATUS_CONFIG: Record<string, { icon: React.ElementType; color: string; labelKey: string; spin?: boolean }> = {
   waiting: { icon: Clock, color: "text-warning", labelKey: "statusWaiting" },
   confirming: { icon: Loader2, color: "text-info", labelKey: "statusConfirming", spin: true },
@@ -100,8 +174,13 @@ export default function CryptoPaymentPage() {
       await cryptoOrderAPI.submitHash(Number(paymentId), txHash.trim());
       setSubmitted(true);
       await fetchStatus();
-    } catch {
-      setError(t("submitError"));
+    } catch (err: any) {
+      const msg = err?.message || "";
+      if (msg.includes("already been used")) {
+        setError("此交易 Hash 已被其他訂單使用，請確認是否輸入正確");
+      } else {
+        setError(t("submitError"));
+      }
     } finally {
       setSubmitting(false);
     }
@@ -173,10 +252,10 @@ export default function CryptoPaymentPage() {
                 <span>⚠️ 請使用 <strong>{cryptoOrder.network.toUpperCase()}</strong> 網路轉帳</span>
               </div>
 
-              {/* QR Code */}
+              {/* QR Code with payment URI */}
               {cryptoOrder.verifyStatus === "pending" && !submitted && (
                 <div className="my-6 p-4 bg-white rounded-xl">
-                  <QRCodeSVG value={cryptoOrder.walletAddress} size={200} />
+                  <QRCodeSVG value={buildPaymentUri(cryptoOrder)} size={200} />
                 </div>
               )}
 

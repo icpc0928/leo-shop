@@ -139,9 +139,19 @@ export const adminProductAPI = {
 };
 
 export const adminOrderAPI = {
-  getAll: (params?: { status?: string; page?: number; size?: number }) => {
+  getAll: (params?: { 
+    status?: string; 
+    orderNumber?: string;
+    startDate?: string;
+    endDate?: string;
+    page?: number; 
+    size?: number;
+  }) => {
     const query = new URLSearchParams();
     if (params?.status) query.set('status', params.status);
+    if (params?.orderNumber) query.set('orderNumber', params.orderNumber);
+    if (params?.startDate) query.set('startDate', params.startDate);
+    if (params?.endDate) query.set('endDate', params.endDate);
     if (params?.page !== undefined) query.set('page', String(params.page));
     if (params?.size) query.set('size', String(params.size));
     return fetchAdminAPI(`/api/admin/orders?${query}`);
@@ -233,7 +243,25 @@ export const cryptoOrderAPI = {
 
 // Admin Crypto Order API
 export const adminCryptoOrderAPI = {
-  getAll: () => fetchAdminAPI('/api/admin/crypto-orders'),
+  getAll: (params?: { 
+    status?: string;
+    orderNumber?: string;
+    txHash?: string;
+    startDate?: string;
+    endDate?: string;
+    page?: number;
+    size?: number;
+  }) => {
+    const query = new URLSearchParams();
+    if (params?.status) query.set('status', params.status);
+    if (params?.orderNumber) query.set('orderNumber', params.orderNumber);
+    if (params?.txHash) query.set('txHash', params.txHash);
+    if (params?.startDate) query.set('startDate', params.startDate);
+    if (params?.endDate) query.set('endDate', params.endDate);
+    if (params?.page !== undefined) query.set('page', String(params.page));
+    if (params?.size) query.set('size', String(params.size));
+    return fetchAdminAPI(`/api/admin/crypto-orders?${query}`);
+  },
   verify: (id: number) => fetchAdminAPI(`/api/admin/crypto-orders/${id}/verify`, { method: 'POST' }),
   confirm: (id: number) => fetchAdminAPI(`/api/admin/crypto-orders/${id}/confirm`, { method: 'POST' }),
   reject: (id: number) => fetchAdminAPI(`/api/admin/crypto-orders/${id}/reject`, { method: 'POST' }),

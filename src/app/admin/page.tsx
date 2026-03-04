@@ -14,30 +14,19 @@ const iconMap: Record<string, React.ElementType> = {
   Users,
 };
 
-const statusColors: Record<string, string> = {
-  PENDING: "badge-warning",
-  CONFIRMED: "badge-info",
-  SHIPPED: "badge-info",
-  DELIVERED: "badge-success",
-  COMPLETED: "badge-success",
-  CANCELLED: "badge-error",
-  processing: "badge-warning",
-  shipped: "badge-info",
-  completed: "badge-success",
-  cancelled: "badge-error",
-};
-
-const statusLabels: Record<string, string> = {
-  PENDING: "待處理",
-  CONFIRMED: "已確認",
-  SHIPPED: "已出貨",
-  DELIVERED: "已送達",
-  COMPLETED: "已完成",
-  CANCELLED: "已取消",
-  processing: "處理中",
-  shipped: "已出貨",
-  completed: "已完成",
-  cancelled: "已取消",
+const statusConfig: Record<string, { label: string; bg: string; text: string }> = {
+  PENDING: { label: "待處理", bg: "bg-amber-50", text: "text-amber-600" },
+  PAID: { label: "已付款", bg: "bg-emerald-50", text: "text-emerald-600" },
+  PROCESSING: { label: "處理中", bg: "bg-yellow-50", text: "text-yellow-600" },
+  CONFIRMED: { label: "已確認", bg: "bg-blue-50", text: "text-blue-600" },
+  SHIPPED: { label: "已出貨", bg: "bg-indigo-50", text: "text-indigo-600" },
+  DELIVERED: { label: "已送達", bg: "bg-emerald-50", text: "text-emerald-600" },
+  COMPLETED: { label: "已完成", bg: "bg-emerald-50", text: "text-emerald-600" },
+  CANCELLED: { label: "已取消", bg: "bg-red-50", text: "text-red-500" },
+  processing: { label: "處理中", bg: "bg-yellow-50", text: "text-yellow-600" },
+  shipped: { label: "已出貨", bg: "bg-indigo-50", text: "text-indigo-600" },
+  completed: { label: "已完成", bg: "bg-emerald-50", text: "text-emerald-600" },
+  cancelled: { label: "已取消", bg: "bg-red-50", text: "text-red-500" },
 };
 
 interface DashboardStat {
@@ -175,9 +164,15 @@ export default function AdminDashboard() {
                     <td className="text-base-content/50">{formatDate(order.createdAt?.split('T')[0] || order.date || '')}</td>
                     <td className="text-right font-medium tabular-nums">{formatCurrency(order.totalAmount || order.total || 0)}</td>
                     <td>
-                      <span className={`badge ${statusColors[order.status] || "badge-ghost"} badge-sm`}>
-                        {statusLabels[order.status] || order.status}
-                      </span>
+                      {statusConfig[order.status] ? (
+                        <span className={`inline-block min-w-[60px] px-3 py-1.5 rounded-full text-xs font-medium text-center ${statusConfig[order.status].bg} ${statusConfig[order.status].text}`}>
+                          {statusConfig[order.status].label}
+                        </span>
+                      ) : (
+                        <span className="inline-block min-w-[60px] px-3 py-1.5 rounded-full text-xs font-medium text-center bg-gray-100 text-gray-600">
+                          {order.status}
+                        </span>
+                      )}
                     </td>
                   </tr>
                 ))}
