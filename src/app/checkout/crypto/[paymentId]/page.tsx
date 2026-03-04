@@ -252,6 +252,13 @@ export default function CryptoPaymentPage() {
                 <span>⚠️ 請使用 <strong>{cryptoOrder.network.toUpperCase()}</strong> 網路轉帳</span>
               </div>
 
+              {/* Amount Notice */}
+              <div className="bg-blue-50 text-blue-700 rounded-xl p-3 text-xs leading-relaxed w-full">
+                <p className="font-medium mb-1">💡 為什麼金額有小數尾數？</p>
+                <p>系統會在付款金額末尾加上隨機小數，用來唯一識別您的這筆交易，確保不會與其他訂單混淆。</p>
+                <p className="mt-1 font-semibold text-blue-800">⚠️ 請務必依照上方顯示的精確金額轉帳，金額不符將導致驗證失敗。</p>
+              </div>
+
               {/* QR Code with payment URI */}
               {cryptoOrder.verifyStatus === "pending" && !submitted && (
                 <div className="my-6 p-4 bg-white rounded-xl">
