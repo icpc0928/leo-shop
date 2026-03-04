@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Container from "@/components/ui/Container";
-import ThemeSwitcher from "@/components/ui/ThemeSwitcher";
 import { useCartStore } from "@/stores/cartStore";
 import { useAuthStore } from "@/stores/authStore";
 import { useLocaleStore } from "@/stores/localeStore";
@@ -130,9 +129,6 @@ export default function Header() {
                   ))}
                 </ul>
               </div>
-
-              {/* Theme */}
-              <ThemeSwitcher />
 
               {/* Search */}
               <button className="btn btn-ghost btn-sm btn-square" aria-label="Search">

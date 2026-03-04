@@ -5,7 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import AdminAuthGuard from "@/components/admin/AdminAuthGuard";
 import { clearAdminSession } from "@/app/admin/login/page";
-import { LayoutDashboard, Package, ClipboardList, Users, LogOut, Store, Menu, Wallet, Bitcoin, Shield } from "lucide-react";
+import { LayoutDashboard, Package, ClipboardList, Users, LogOut, Store, Menu, Wallet, Bitcoin, Shield, Settings } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const navItems = [
@@ -16,6 +16,7 @@ const navItems = [
   { label: "管理員", href: "/admin/admin-users", icon: Shield },
   { label: "支付管理", href: "/admin/payment-methods", icon: Wallet },
   { label: "加密訂單", href: "/admin/crypto-orders", icon: Bitcoin },
+  { label: "系統設定", href: "/admin/settings", icon: Settings },
 ];
 
 function Sidebar({ pathname }: { pathname: string }) {

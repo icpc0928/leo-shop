@@ -74,7 +74,13 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
         const res = await fetch(`${API_BASE}/api/exchange-rates`);
         if (res.ok) {
           const data = await res.json();
-          setRates(data);
+          // New API format: { baseCurrency, rates }
+          if (data.rates) {
+            setRates(data.rates);
+          } else {
+            // Fallback for old API format (just in case)
+            setRates(data);
+          }
         }
       } catch {
         // API unavailable, keep TWD only
