@@ -177,9 +177,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
             <span className="text-xs text-muted">{t("inStock", { count: product.stock })}</span>
           </div>
 
-          <Button size="lg" onClick={handleAddToCart}>
+          <Button size="lg" onClick={handleAddToCart} disabled={product.stock <= 0}>
             <ShoppingBag className="w-5 h-5 mr-2" />
-            {t("addToCart")}
+            {product.stock <= 0 ? "已售完" : t("addToCart")}
           </Button>
         </div>
       </div>

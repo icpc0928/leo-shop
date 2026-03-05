@@ -127,6 +127,15 @@ export const addressAPI = {
 
 // Admin API
 export const adminProductAPI = {
+  getAll: (params?: { category?: string; keyword?: string; sort?: string; page?: number; size?: number }) => {
+    const query = new URLSearchParams();
+    if (params?.category) query.set('category', params.category);
+    if (params?.keyword) query.set('keyword', params.keyword);
+    if (params?.sort) query.set('sort', params.sort);
+    if (params?.page !== undefined) query.set('page', String(params.page));
+    if (params?.size) query.set('size', String(params.size));
+    return fetchAdminAPI(`/api/admin/products?${query}`);
+  },
   create: (data: {
     name: string; slug: string; description: string; price: number;
     comparePrice?: number; imageUrl: string; imageUrls?: string[]; category: string; stock: number; active: boolean;

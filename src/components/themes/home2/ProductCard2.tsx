@@ -28,7 +28,7 @@ export default function ProductCard2({ product }: ProductCard2Props) {
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
-    addItem(product);
+    if (product.stock > 0) addItem(product);
   };
 
   const handleQuickView = (e: React.MouseEvent) => {

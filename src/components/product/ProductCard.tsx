@@ -27,9 +27,9 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* Image */}
       <Link href={`/products/${product.slug}`} className="block">
         <div className="relative aspect-[3/4] overflow-hidden bg-[#f5f0eb]">
-          {product.images[0] && (
+          {product.images?.[0] || product.imageUrl && (
             <Image
-              src={product.images[0]}
+              src={product.images?.[0] || product.imageUrl}
               alt={product.name}
               fill
               className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -70,11 +70,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           className="btn btn-sm w-full bg-white/90 backdrop-blur-sm border border-base-300 text-base-content hover:bg-[#c8956c] hover:text-white hover:border-[#c8956c] text-xs tracking-wider"
           onClick={(e) => {
             e.preventDefault();
-            addItem(product);
+            if (product.stock > 0) addItem(product);
           }}
+          disabled={product.stock <= 0}
         >
           <ShoppingBag className="w-3.5 h-3.5" aria-hidden="true" />
-          {t("addToCart")}
+          {product.stock <= 0 ? "已售完" : t("addToCart")}
         </button>
       </div>
     </div>

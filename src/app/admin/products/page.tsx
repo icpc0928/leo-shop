@@ -69,7 +69,7 @@ export default function AdminProducts() {
 
   const fetchProducts = async () => {
     try {
-      const data = await productAPI.getAll({ size: 100 });
+      const data = await adminProductAPI.getAll({ size: 100 });
       setProducts(data.content.map(mapApiProduct));
     } catch {
       console.warn('API unavailable, using mock products');
@@ -199,7 +199,7 @@ export default function AdminProducts() {
                 {filtered.map((product) => (
                   <tr key={product.id}>
                     <td>
-                      <Image src={resolveImageUrl(product.images[0] || "https://picsum.photos/40/40")} alt={product.name} width={40} height={40} className="rounded object-cover" />
+                      <Image src={resolveImageUrl(product.images?.[0] || product.imageUrl || "https://picsum.photos/40/40")} alt={product.name} width={40} height={40} className="rounded object-cover" />
                     </td>
                     <td className="font-medium">{product.name}</td>
                     <td className="text-base-content/50">{product.category}</td>

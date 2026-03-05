@@ -134,7 +134,7 @@ export default function AdminDashboard() {
                 <XAxis dataKey="date" fontSize={12} tickLine={false} />
                 <YAxis fontSize={12} tickLine={false} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
                 <Tooltip formatter={(value) => [formatCurrency(Number(value)), "營收"]} />
-                <Line type="monotone" dataKey="revenue" stroke="oklch(var(--p))" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                <Line type="monotone" dataKey="revenue" stroke="oklch(var(--p))" strokeWidth={2} dot={{ r: 4, fill: "oklch(var(--p))", stroke: "#fff", strokeWidth: 2 }} activeDot={{ r: 6, fill: "oklch(var(--p))", stroke: "#fff", strokeWidth: 2 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>

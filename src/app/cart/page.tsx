@@ -62,7 +62,7 @@ export default function CartPage() {
                   <td>
                     <div className="flex items-center gap-4">
                       <div className="relative w-16 h-16 shrink-0">
-                        <Image src={item.product.images[0]} alt={item.product.name} fill className="object-cover rounded" />
+                        <Image src={item.product.images?.[0] || item.product.imageUrl || '/placeholder.png'} alt={item.product.name} fill className="object-cover rounded" />
                       </div>
                       <div>
                         <Link href={`/products/${item.product.slug}`} className="font-medium hover:text-primary transition-colors text-sm">
