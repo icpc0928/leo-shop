@@ -38,9 +38,11 @@ async function fetchAPI(endpoint: string, options?: RequestInit) {
     const error = await res.json().catch(() => ({ message: 'Request failed' }));
     throw new Error(error.error || error.message || `HTTP ${res.status}`);
   }
-  // Handle 204 No Content
+  // Handle empty body (204 or 200 with no content)
   if (res.status === 204) return null;
-  return res.json();
+  const text = await res.text();
+  if (!text) return null;
+  return JSON.parse(text);
 }
 
 async function fetchAdminAPI(endpoint: string, options?: RequestInit) {
@@ -52,6 +54,13 @@ async function fetchAdminAPI(endpoint: string, options?: RequestInit) {
   };
   const res = await fetch(`${API_BASE}${endpoint}`, { ...options, headers });
   if (!res.ok) {
+    if (res.status === 401 || res.status === 403) {
+      removeAdminToken();
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('leo-shop-admin-user');
+        window.location.href = '/admin/login';
+      }
+    }
     const error = await res.json().catch(() => ({ message: 'Request failed' }));
     throw new Error(error.error || error.message || `HTTP ${res.status}`);
   }
@@ -280,4 +289,32 @@ export const adminSettingsAPI = {
   get: () => fetchAdminAPI('/api/admin/settings'),
   update: (data: Record<string, string>) =>
     fetchAdminAPI('/api/admin/settings', { method: 'PUT', body: JSON.stringify(data) }),
+};
+
+// Site Info API (public)
+export const siteInfoAPI = {
+  get: () => fetchAPI('/api/site-info'),
+};
+
+// Category API (public)
+export const categoryAPI = {
+  getAll: () => fetchAPI('/api/categories'),
+};
+
+// Admin Category API
+export const adminCategoryAPI = {
+  getAll: () => fetchAdminAPI('/api/admin/categories'),
+  create: (data: { name: string; description?: string; sortOrder?: number; active?: boolean }) =>
+    fetchAdminAPI('/api/admin/categories', { method: 'POST', body: JSON.stringify(data) }),
+  update: (id: number, data: { name: string; description?: string; sortOrder?: number; active?: boolean }) =>
+    fetchAdminAPI(`/api/admin/categories/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  delete: (id: number) => fetchAdminAPI(`/api/admin/categories/${id}`, { method: 'DELETE' }),
+};
+
+// Wishlist API
+export const wishlistAPI = {
+  getIds: (): Promise<number[]> => fetchAPI('/api/wishlist/ids'),
+  getProducts: () => fetchAPI('/api/wishlist'),
+  toggle: (productId: number): Promise<{ success: boolean; wishlisted: boolean; message: string }> =>
+    fetchAPI(`/api/wishlist/${productId}`, { method: 'POST' }),
 };

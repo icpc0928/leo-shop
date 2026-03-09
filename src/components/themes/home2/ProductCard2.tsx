@@ -2,10 +2,13 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Product } from "@/types";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useCartStore } from "@/stores/cartStore";
-import { ShoppingBag, Heart, Eye } from "lucide-react";
+import { useWishlistStore } from "@/stores/wishlistStore";
+import { useAuthStore } from "@/stores/authStore";
+import { ShoppingBag, Heart } from "lucide-react";
 import { useTranslations } from "next-intl";
 import "./theme.css";
 
@@ -14,9 +17,14 @@ interface ProductCard2Props {
 }
 
 export default function ProductCard2({ product }: ProductCard2Props) {
+  const router = useRouter();
   const addItem = useCartStore((s) => s.addItem);
   const { formatPrice } = useCurrency();
   const t = useTranslations("product");
+  const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
+  const toggleWishlist = useWishlistStore((s) => s.toggleWishlist);
+  const productId = typeof product.id === 'number' ? product.id : parseInt(String(product.id), 10);
+  const isWishlisted = useWishlistStore((s) => s.isWishlisted(productId));
 
   const discount =
     product.comparePrice && product.comparePrice > product.price
@@ -31,16 +39,13 @@ export default function ProductCard2({ product }: ProductCard2Props) {
     if (product.stock > 0) addItem(product);
   };
 
-  const handleQuickView = (e: React.MouseEvent) => {
+  const handleToggleWishlist = async (e: React.MouseEvent) => {
     e.preventDefault();
-    // TODO: Open quick view modal
-    console.log("Quick view:", product.slug);
-  };
-
-  const handleToggleWishlist = (e: React.MouseEvent) => {
-    e.preventDefault();
-    // TODO: Toggle wishlist
-    console.log("Toggle wishlist:", product.slug);
+    try {
+      await toggleWishlist(productId);
+    } catch (error) {
+      console.error("Failed to toggle wishlist:", error);
+    }
   };
 
   return (
@@ -71,25 +76,22 @@ export default function ProductCard2({ product }: ProductCard2Props) {
               className="home2-product-action-btn"
               onClick={handleAddToCart}
               aria-label={t("addToCart")}
+              disabled={product.stock <= 0}
             >
               <ShoppingBag className="w-4 h-4" strokeWidth={1.5} />
-              <span className="hidden sm:inline">{t("addToCart")}</span>
+              <span className="hidden sm:inline">{product.stock <= 0 ? "已售完" : t("addToCart")}</span>
             </button>
             <button
               className="home2-product-action-btn"
               onClick={handleToggleWishlist}
-              aria-label="Add to wishlist"
-              style={{ flex: '0 0 auto', minWidth: '44px' }}
+              aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
             >
-              <Heart className="w-4 h-4" strokeWidth={1.5} />
-            </button>
-            <button
-              className="home2-product-action-btn"
-              onClick={handleQuickView}
-              aria-label="Quick view"
-              style={{ flex: '0 0 auto', minWidth: '44px' }}
-            >
-              <Eye className="w-4 h-4" strokeWidth={1.5} />
+              <Heart
+                className="w-4 h-4"
+                strokeWidth={1.5}
+                fill={isWishlisted ? "#ef4444" : "none"}
+                stroke={isWishlisted ? "#ef4444" : "currentColor"}
+              />
             </button>
           </div>
         </div>

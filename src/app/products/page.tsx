@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import Container from "@/components/ui/Container";
 import Breadcrumb from "@/components/layout/Breadcrumb";
 import ProductGrid from "@/components/product/ProductGrid";
@@ -14,6 +15,9 @@ import type { Product } from "@/types";
 type SortOption = "default" | "price-asc" | "price-desc" | "name";
 
 export default function ProductsPage() {
+  const searchParams = useSearchParams();
+  const keywordParam = searchParams.get("keyword") || "";
+  const [keyword, setKeyword] = useState(keywordParam);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [sort, setSort] = useState<SortOption>("default");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -23,6 +27,12 @@ export default function ProductsPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const t = useTranslations("product");
+
+  // Sync keyword from URL
+  useEffect(() => {
+    setKeyword(keywordParam);
+    setCurrentPage(0);
+  }, [keywordParam]);
 
   const sortMap: Record<string, string | undefined> = {
     "default": undefined,
@@ -36,6 +46,7 @@ export default function ProductsPage() {
     try {
       const data = await productAPI.getAll({
         category: selectedCategory || undefined,
+        keyword: keyword || undefined,
         sort: sortMap[sort],
         page: currentPage,
         size: 12,
@@ -57,7 +68,7 @@ export default function ProductsPage() {
     } finally {
       setLoading(false);
     }
-  }, [selectedCategory, sort, currentPage]);
+  }, [selectedCategory, sort, currentPage, keyword]);
 
   useEffect(() => {
     (async () => {
@@ -115,7 +126,7 @@ export default function ProductsPage() {
               value={sort}
               onChange={(e) => { setSort(e.target.value as SortOption); setCurrentPage(0); }}
               aria-label={t("sortDefault")}
-              className="text-sm border border-border px-3 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 bg-white"
+              className="text-sm border border-base-200 pl-4 pr-8 py-2 rounded-full focus:outline-none focus:border-gray-400 bg-white cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22/%3E%3C/svg%3E')] bg-no-repeat bg-[right_0.75rem_center]"
             >
               <option value="default">{t("sortDefault")}</option>
               <option value="price-asc">{t("sortPriceAsc")}</option>
@@ -153,7 +164,7 @@ export default function ProductsPage() {
                       <button
                         key={i}
                         onClick={() => setCurrentPage(i)}
-                        className={`px-3 py-1 text-sm border ${currentPage === i ? "bg-foreground text-white border-foreground" : "border-border hover:border-foreground"}`}
+                        className={`w-9 h-9 rounded-full text-sm flex items-center justify-center transition-colors cursor-pointer ${currentPage === i ? "bg-[var(--home2-primary,#333)] text-white" : "border border-base-200 hover:bg-base-200"}`}
                       >
                         {i + 1}
                       </button>

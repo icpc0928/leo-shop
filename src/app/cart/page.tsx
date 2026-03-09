@@ -33,7 +33,7 @@ export default function CartPage() {
           <ShoppingBag className="w-16 h-16 mx-auto text-base-content/20 mb-6" strokeWidth={1} />
           <h1 className="text-3xl font-serif tracking-wider mb-4">{t("empty")}</h1>
           <p className="text-base-content/60 mb-8">{t("emptyDesc")}</p>
-          <Link href="/products" className="btn btn-outline">{t("continueShopping")}</Link>
+          <Link href="/products" className="inline-flex items-center px-6 py-2.5 border border-base-300 rounded-xl text-sm hover:bg-gray-50 transition-colors">{t("continueShopping")}</Link>
         </div>
       </Container>
     );
@@ -74,12 +74,12 @@ export default function CartPage() {
                   </td>
                   <td className="text-center text-sm">{formatPrice(item.product.price)}</td>
                   <td>
-                    <div className="join mx-auto flex justify-center">
-                      <button className="btn btn-sm join-item" onClick={() => updateQuantity(item.product.id, item.quantity - 1)} aria-label="Decrease quantity">
+                    <div className="flex items-center justify-center gap-0">
+                      <button className="w-8 h-8 flex items-center justify-center border border-base-300 rounded-l-xl bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer" onClick={() => updateQuantity(item.product.id, item.quantity - 1)} aria-label="Decrease quantity">
                         <Minus className="w-3 h-3" aria-hidden="true" />
                       </button>
-                      <span className="btn btn-sm join-item no-animation">{item.quantity}</span>
-                      <button className="btn btn-sm join-item" onClick={() => updateQuantity(item.product.id, item.quantity + 1)} aria-label="Increase quantity">
+                      <span className="w-10 h-8 flex items-center justify-center border-y border-base-300 bg-white text-sm">{item.quantity}</span>
+                      <button className="w-8 h-8 flex items-center justify-center border border-base-300 rounded-r-xl bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer" onClick={() => updateQuantity(item.product.id, item.quantity + 1)} aria-label="Increase quantity">
                         <Plus className="w-3 h-3" aria-hidden="true" />
                       </button>
                     </div>
@@ -90,7 +90,7 @@ export default function CartPage() {
                   <td>
                     <button
                       onClick={() => removeItem(item.product.id)}
-                      className="btn btn-ghost btn-sm btn-square text-error"
+                      className="w-8 h-8 flex items-center justify-center rounded-xl border border-red-200 text-red-400 hover:bg-red-50 transition-colors cursor-pointer"
                       aria-label="Remove item"
                     >
                       <Trash2 className="w-4 h-4" aria-hidden="true" />
@@ -102,19 +102,19 @@ export default function CartPage() {
           </table>
 
           <div className="flex justify-between mt-4">
-            <button onClick={clearCart} className="btn btn-ghost btn-sm">
+            <button onClick={clearCart} className="text-sm text-base-content/60 hover:text-base-content transition-colors cursor-pointer">
               {t("clearCart")}
             </button>
-            <Link href="/products" className="btn btn-ghost btn-sm">
+            <Link href="/products" className="text-sm text-base-content/60 hover:text-base-content transition-colors">
               {t("continueShopping")} →
             </Link>
           </div>
         </div>
 
         <div className="lg:w-80 mt-8 lg:mt-0">
-          <div className="card bg-base-200">
-            <div className="card-body">
-              <h2 className="card-title text-sm tracking-wider">{t("orderSummary")}</h2>
+          <div className="border border-base-200 rounded-2xl">
+            <div className="p-6">
+              <h2 className="text-sm font-semibold tracking-wider mb-4">{t("orderSummary")}</h2>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-base-content/60">{t("subtotal")}</span>
@@ -133,7 +133,7 @@ export default function CartPage() {
                   <span>{formatPrice(total)}</span>
                 </div>
               </div>
-              <Link href="/checkout" className="btn btn-primary mt-4 w-full">
+              <Link href="/checkout" className="block mt-4 w-full text-center bg-[var(--home2-primary,#c8956c)] py-3 text-sm tracking-wider hover:opacity-90 transition-opacity rounded-xl cursor-pointer" style={{ color: '#fff', fontWeight: 600 }}>
                 {t("proceedToCheckout")}
               </Link>
             </div>

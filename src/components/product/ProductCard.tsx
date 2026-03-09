@@ -2,10 +2,13 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Product } from "@/types";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { useCartStore } from "@/stores/cartStore";
-import { ShoppingBag } from "lucide-react";
+import { useWishlistStore } from "@/stores/wishlistStore";
+import { useAuthStore } from "@/stores/authStore";
+import { ShoppingBag, Heart } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 interface ProductCardProps {
@@ -13,14 +16,28 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const router = useRouter();
   const addItem = useCartStore((s) => s.addItem);
   const { formatPrice } = useCurrency();
   const t = useTranslations("product");
+  const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
+  const toggleWishlist = useWishlistStore((s) => s.toggleWishlist);
+  const productId = typeof product.id === 'number' ? product.id : parseInt(String(product.id), 10);
+  const isWishlisted = useWishlistStore((s) => s.isWishlisted(productId));
 
   const discount =
     product.comparePrice && product.comparePrice > product.price
       ? Math.round((1 - product.price / product.comparePrice) * 100)
       : 0;
+
+  const handleWishlistClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    try {
+      await toggleWishlist(productId);
+    } catch (error) {
+      console.error("Failed to toggle wishlist:", error);
+    }
+  };
 
   return (
     <div className="group relative">
@@ -64,19 +81,33 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
       </div>
 
-      {/* Add to cart - appears on hover */}
+      {/* Action buttons - appears on hover */}
       <div className="absolute bottom-[4.5rem] left-0 right-0 px-3 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
-        <button
-          className="btn btn-sm w-full bg-white/90 backdrop-blur-sm border border-base-300 text-base-content hover:bg-[#c8956c] hover:text-white hover:border-[#c8956c] text-xs tracking-wider"
-          onClick={(e) => {
-            e.preventDefault();
-            if (product.stock > 0) addItem(product);
-          }}
-          disabled={product.stock <= 0}
-        >
-          <ShoppingBag className="w-3.5 h-3.5" aria-hidden="true" />
-          {product.stock <= 0 ? "已售完" : t("addToCart")}
-        </button>
+        <div className="flex gap-2">
+          <button
+            className="btn btn-sm flex-1 bg-white/90 backdrop-blur-sm border border-base-300 text-base-content hover:bg-[#c8956c] hover:text-white hover:border-[#c8956c] text-xs tracking-wider"
+            onClick={(e) => {
+              e.preventDefault();
+              if (product.stock > 0) addItem(product);
+            }}
+            disabled={product.stock <= 0}
+          >
+            <ShoppingBag className="w-3.5 h-3.5" aria-hidden="true" />
+            {product.stock <= 0 ? "已售完" : t("addToCart")}
+          </button>
+          <button
+            className="btn btn-sm btn-square bg-white/90 backdrop-blur-sm border border-base-300 hover:bg-[#c8956c] hover:border-[#c8956c] hover:text-white"
+            onClick={handleWishlistClick}
+            aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          >
+            <Heart
+              className="w-4 h-4"
+              fill={isWishlisted ? "#ef4444" : "none"}
+              stroke={isWishlisted ? "#ef4444" : "currentColor"}
+              aria-hidden="true"
+            />
+          </button>
+        </div>
       </div>
     </div>
   );

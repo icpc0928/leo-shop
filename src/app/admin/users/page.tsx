@@ -26,49 +26,55 @@ export default function AdminUsers() {
       <h1 className="text-2xl font-bold">會員管理</h1>
 
       {/* Search */}
-      <div className="form-control">
-        <div className="input-group flex">
-          <span className="bg-base-200 flex items-center px-3"><Search className="w-4 h-4 text-base-content/40" /></span>
-          <input type="text" placeholder="搜尋姓名或 Email…" value={search} name="search" autoComplete="off" aria-label="搜尋會員"
-            onChange={(e) => setSearch(e.target.value)} className="input input-bordered flex-1" />
-        </div>
+      <div className="relative">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/40" />
+        <input type="text" placeholder="搜尋姓名或 Email…" value={search} name="search" autoComplete="off" aria-label="搜尋會員"
+          onChange={(e) => setSearch(e.target.value)} className="w-full pl-11 pr-4 py-3 border border-base-200 rounded-2xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors" />
       </div>
 
       {/* Table */}
-      <div className="card bg-base-100 shadow-sm">
-        <div className="card-body p-0">
+      <div className="bg-base-100 border border-base-200 rounded-2xl overflow-hidden">
+        <div className="p-0">
           <div className="overflow-x-auto">
             <table className="table">
               <thead>
                 <tr>
-                  <th>名稱</th><th>Email</th><th>電話</th><th>角色</th>
-                  <th>註冊日期</th><th>狀態</th><th className="text-right">操作</th>
+                  <th className="text-center">名稱</th><th className="text-center">Email</th><th className="text-center">電話</th><th className="text-center">角色</th>
+                  <th className="text-center">註冊日期</th><th className="text-center">狀態</th><th className="text-center">操作</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((user) => (
                   <tr key={user.id}>
-                    <td className="font-medium">{user.name}</td>
-                    <td className="text-base-content/50">{user.email}</td>
-                    <td className="text-base-content/50">{user.phone}</td>
-                    <td>
-                      <span className={`badge badge-sm ${user.role === "admin" ? "badge-secondary" : "badge-ghost"}`}>
+                    <td className="text-center font-medium">{user.name}</td>
+                    <td className="text-center text-base-content/50">{user.email}</td>
+                    <td className="text-center text-base-content/50">{user.phone}</td>
+                    <td className="text-center">
+                      <span className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-medium border ${
+                        user.role === "admin" ? "border-violet-200 bg-violet-50 text-violet-600" : "border-gray-200 bg-gray-50 text-gray-500"
+                      }`}>
                         {user.role === "admin" ? "管理員" : "會員"}
                       </span>
                     </td>
-                    <td className="text-base-content/50">{formatDate(user.registeredAt)}</td>
-                    <td>
-                      <span className={`badge badge-sm ${user.isActive ? "badge-success" : "badge-error"}`}>
+                    <td className="text-center text-base-content/50">{formatDate(user.registeredAt)}</td>
+                    <td className="text-center">
+                      <span className={`inline-flex items-center justify-center min-w-[60px] px-3 py-1 rounded-full text-xs font-medium border ${
+                        user.isActive ? "border-emerald-200 bg-emerald-50 text-emerald-600" : "border-red-200 bg-red-50 text-red-500"
+                      }`}>
                         {user.isActive ? "啟用" : "停用"}
                       </span>
                     </td>
-                    <td className="text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <button onClick={() => setDetailUser(user)} className="btn btn-ghost btn-xs btn-square" aria-label="View user details">
+                    <td className="text-center">
+                      <div className="flex items-center justify-center gap-2">
+                        <button onClick={() => setDetailUser(user)} className="w-7 h-7 rounded-full inline-flex items-center justify-center border border-gray-300 text-base-content/60 hover:bg-gray-300 transition-colors cursor-pointer" aria-label="View user details">
                           <Eye size={14} aria-hidden="true" />
                         </button>
                         <button onClick={() => toggleActive(user.id)}
-                          className={`btn btn-xs ${user.isActive ? "btn-error btn-outline" : "btn-success btn-outline"}`}>
+                          className={`inline-flex items-center px-4 py-1 rounded-full text-xs font-medium border cursor-pointer transition-colors ${
+                            user.isActive 
+                              ? "border-red-200 text-red-500 hover:bg-red-50" 
+                              : "border-emerald-200 text-emerald-600 hover:bg-emerald-50"
+                          }`}>
                           {user.isActive ? "停用" : "啟用"}
                         </button>
                       </div>

@@ -130,31 +130,33 @@ export default function AdminPaymentMethodsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">支付管理</h1>
-        <div className="flex gap-2">
-          <button onClick={handleRefreshRates} disabled={refreshing} className="btn btn-outline btn-sm gap-2">
-            <RefreshCw size={16} className={refreshing ? "animate-spin" : ""} /> 
+        <div className="flex gap-3">
+          <button onClick={handleRefreshRates} disabled={refreshing}
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium border border-base-300 bg-white text-base-content hover:bg-base-200 transition-colors cursor-pointer">
+            <RefreshCw size={15} className={refreshing ? "animate-spin" : ""} /> 
             {refreshing ? "更新中..." : "刷新匯率"}
           </button>
-          <button onClick={openAdd} className="btn btn-primary btn-sm gap-2">
-            <Plus size={16} /> 新增幣種
+          <button onClick={openAdd}
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium bg-[#0071e3] text-white hover:bg-[#0077ED] transition-colors cursor-pointer">
+            <Plus size={15} /> 新增幣種
           </button>
         </div>
       </div>
 
-      <div className="card bg-base-100 shadow-sm">
+      <div className="card bg-base-100 border border-base-200 rounded-2xl overflow-hidden">
         <div className="card-body p-0">
           <div className="overflow-x-auto">
             <table className="table">
               <thead>
                 <tr>
-                  <th>幣種名</th>
-                  <th>符號</th>
-                  <th>網路</th>
-                  <th>錢包地址</th>
-                  <th className="text-right">匯率 ({baseCurrency})</th>
-                  <th>匯率來源</th>
-                  <th>狀態</th>
-                  <th className="text-right">操作</th>
+                  <th className="text-center">幣種名</th>
+                  <th className="text-center">符號</th>
+                  <th className="text-center">網路</th>
+                  <th className="text-center">錢包地址</th>
+                  <th className="text-center">匯率 ({baseCurrency})</th>
+                  <th className="text-center">匯率來源</th>
+                  <th className="text-center">狀態</th>
+                  <th className="text-center">操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -163,35 +165,39 @@ export default function AdminPaymentMethodsPage() {
                 )}
                 {methods.map((m) => (
                   <tr key={m.id}>
-                    <td className="font-medium">{m.name}</td>
-                    <td>{m.symbol}</td>
-                    <td className="text-base-content/60">{m.network}</td>
-                    <td className="font-mono text-xs">{truncate(m.walletAddress, 16)}</td>
-                    <td className="text-right tabular-nums">{m.exchangeRate}</td>
-                    <td>
-                      <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
-                        m.rateSource === 'api' ? 'bg-blue-50 text-blue-600' : 'bg-gray-100 text-gray-600'
+                    <td className="text-center font-medium">{m.name}</td>
+                    <td className="text-center">{m.symbol}</td>
+                    <td className="text-center text-base-content/60">{m.network}</td>
+                    <td className="text-center font-mono text-xs">{truncate(m.walletAddress, 16)}</td>
+                    <td className="text-center tabular-nums">{m.exchangeRate}</td>
+                    <td className="text-center">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${
+                        m.rateSource === 'api' 
+                          ? 'border-blue-200 bg-blue-50 text-blue-600' 
+                          : 'border-gray-200 bg-gray-50 text-gray-500'
                       }`}>
                         {m.rateSource === 'api' ? 'API' : '手動'}
                       </span>
                     </td>
-                    <td>
+                    <td className="text-center">
                       <button
                         onClick={() => handleToggle(m.id)}
-                        className={`inline-block min-w-[60px] px-3 py-1.5 rounded-full text-xs font-medium text-center cursor-pointer transition-colors ${
-                          m.enabled ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                        className={`inline-flex items-center min-w-[60px] justify-center px-3 py-1 rounded-full text-xs font-medium border cursor-pointer transition-colors ${
+                          m.enabled 
+                            ? 'border-emerald-200 bg-emerald-50 text-emerald-600 hover:bg-emerald-100' 
+                            : 'border-gray-200 bg-gray-50 text-gray-400 hover:bg-gray-100'
                         }`}
                       >
                         {m.enabled ? '啟用' : '停用'}
                       </button>
                     </td>
-                    <td className="text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <button onClick={() => openEdit(m)} className="btn btn-ghost btn-xs btn-square" aria-label="Edit">
+                    <td className="text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <button onClick={() => openEdit(m)} className="w-7 h-7 rounded-full inline-flex items-center justify-center border border-gray-300 text-base-content/60 hover:bg-gray-300 transition-colors cursor-pointer" aria-label="Edit">
                           <Pencil size={14} />
                         </button>
                         <button onClick={() => { setDeletingId(m.id); setDeleteDialogOpen(true); }}
-                          className="btn btn-ghost btn-xs btn-square text-error" aria-label="Delete">
+                          className="w-7 h-7 rounded-full inline-flex items-center justify-center border border-error/30 text-error/60 hover:bg-error/10 transition-colors cursor-pointer" aria-label="Delete">
                           <Trash2 size={14} />
                         </button>
                       </div>

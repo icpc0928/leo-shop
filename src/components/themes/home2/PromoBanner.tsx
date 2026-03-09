@@ -120,10 +120,10 @@ export default function PromoBanner() {
                 Discover pieces that transform your space
               </p>
               <Link
-                href="/shop"
-                className="inline-flex items-center gap-2 bg-[#72a499] text-white px-6 py-3 rounded-lg hover:bg-[#5e8a80] transition-colors font-medium"
+                href="/about"
+                className="inline-flex items-center gap-2 bg-[var(--home2-primary)] text-white px-6 py-3 rounded-full hover:opacity-90 transition-opacity font-medium"
               >
-                Shop Now
+                關於我們
                 <svg
                   className="w-5 h-5"
                   fill="none"

@@ -8,6 +8,7 @@ import { useCartStore } from "@/stores/cartStore";
 import { useAuthStore } from "@/stores/authStore";
 import { useLocaleStore } from "@/stores/localeStore";
 import { useTranslations } from "next-intl";
+import { useSiteInfo } from "@/contexts/SiteContext";
 import { ShoppingBag, Search, Menu, X, Globe, User, ChevronDown } from "lucide-react";
 import { useCurrency } from "@/contexts/CurrencyContext";
 
@@ -34,6 +35,7 @@ export default function Header() {
     s.items.reduce((sum, item) => sum + item.quantity, 0)
   );
   const { user, isLoggedIn, logout } = useAuthStore();
+  const { siteName } = useSiteInfo();
   const [mounted, setMounted] = useState(false);
   const [cartBounce, setCartBounce] = useState(false);
   const { locale, setLocale } = useLocaleStore();
@@ -76,7 +78,7 @@ export default function Header() {
           <div className="flex items-center justify-between w-full">
             {/* Logo */}
             <Link href="/" className="text-xl lg:text-2xl font-serif tracking-[0.15em] text-primary">
-              {t("common.shopName")}
+              {siteName}
             </Link>
 
             {/* Desktop Nav */}

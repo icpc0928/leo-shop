@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Save, RefreshCw } from "lucide-react";
 
 type SystemSettings = {
+  siteName: string;
   baseCurrency: string;
   shippingFee: number;
   freeShippingThreshold: number;
@@ -15,6 +16,7 @@ export default function AdminSettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
+    siteName: "",
     baseCurrency: "",
     shippingFee: "",
     freeShippingThreshold: "",
@@ -34,6 +36,7 @@ export default function AdminSettingsPage() {
       const data = await res.json();
       setSettings(data);
       setForm({
+        siteName: data.siteName || "",
         baseCurrency: data.baseCurrency,
         shippingFee: String(data.shippingFee),
         freeShippingThreshold: String(data.freeShippingThreshold),
@@ -56,6 +59,7 @@ export default function AdminSettingsPage() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
+          siteName: form.siteName,
           baseCurrency: form.baseCurrency,
           shippingFee: Number(form.shippingFee),
           freeShippingThreshold: Number(form.freeShippingThreshold),
@@ -65,6 +69,7 @@ export default function AdminSettingsPage() {
       const data = await res.json();
       setSettings(data);
       setForm({
+        siteName: data.siteName || "",
         baseCurrency: data.baseCurrency,
         shippingFee: String(data.shippingFee),
         freeShippingThreshold: String(data.freeShippingThreshold),
@@ -105,7 +110,7 @@ export default function AdminSettingsPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="btn btn-primary gap-2"
+          className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium bg-[#0071e3] text-white hover:bg-[#0077ED] transition-colors cursor-pointer"
         >
           {saving ? <RefreshCw size={16} className="animate-spin" /> : <Save size={16} />}
           儲存設定
@@ -114,8 +119,30 @@ export default function AdminSettingsPage() {
 
       {/* Settings Cards */}
       <div className="grid gap-6">
+        {/* Site Name */}
+        <div className="bg-base-100 border border-base-200 rounded-2xl">
+          <div className="card-body">
+            <h2 className="card-title text-lg">網站名稱</h2>
+            <p className="text-sm text-base-content/60 mb-4">
+              設定前台和後台顯示的網站名稱，每個運營商可自訂。
+            </p>
+            <div className="form-control w-full max-w-xs">
+              <label className="label">
+                <span className="label-text">網站名稱</span>
+              </label>
+              <input
+                type="text"
+                className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors"
+                value={form.siteName}
+                onChange={(e) => setForm({ ...form, siteName: e.target.value })}
+                placeholder="Leo Shop"
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Base Currency */}
-        <div className="card bg-base-100 border border-base-300">
+        <div className="bg-base-100 border border-base-200 rounded-2xl">
           <div className="card-body">
             <h2 className="card-title text-lg">主幣別設定</h2>
             <p className="text-sm text-base-content/60 mb-4">
@@ -126,7 +153,7 @@ export default function AdminSettingsPage() {
                 <span className="label-text">主幣別</span>
               </label>
               <select
-                className="select select-bordered"
+                className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors"
                 value={form.baseCurrency}
                 onChange={(e) => setForm({ ...form, baseCurrency: e.target.value })}
               >
@@ -146,7 +173,7 @@ export default function AdminSettingsPage() {
         </div>
 
         {/* Shipping Settings */}
-        <div className="card bg-base-100 border border-base-300">
+        <div className="bg-base-100 border border-base-200 rounded-2xl">
           <div className="card-body">
             <h2 className="card-title text-lg">運費設定</h2>
             <p className="text-sm text-base-content/60 mb-4">
@@ -160,7 +187,7 @@ export default function AdminSettingsPage() {
                 </label>
                 <input
                   type="number"
-                  className="input input-bordered"
+                  className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors"
                   value={form.freeShippingThreshold}
                   onChange={(e) => setForm({ ...form, freeShippingThreshold: e.target.value })}
                   min="0"
@@ -179,7 +206,7 @@ export default function AdminSettingsPage() {
                 </label>
                 <input
                   type="number"
-                  className="input input-bordered"
+                  className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors"
                   value={form.shippingFee}
                   onChange={(e) => setForm({ ...form, shippingFee: e.target.value })}
                   min="0"
@@ -196,10 +223,14 @@ export default function AdminSettingsPage() {
         </div>
 
         {/* Current Settings Display */}
-        <div className="card bg-neutral text-neutral-content border border-neutral">
+        <div className="bg-neutral text-neutral-content border border-neutral rounded-2xl">
           <div className="card-body">
             <h3 className="font-semibold mb-2">目前設定</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div>
+                <div className="opacity-60">網站名稱</div>
+                <div className="font-semibold">{settings.siteName}</div>
+              </div>
               <div>
                 <div className="opacity-60">主幣別</div>
                 <div className="font-mono font-semibold">{settings.baseCurrency}</div>

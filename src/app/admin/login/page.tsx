@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { adminAuthAPI, setAdminToken, getAdminToken, removeAdminToken } from "@/lib/api";
+import { useSiteInfo } from "@/contexts/SiteContext";
 import { Lock, Mail, AlertCircle } from "lucide-react";
 
 interface AdminInfo {
@@ -34,6 +35,7 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
+  const { siteName } = useSiteInfo();
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -69,7 +71,7 @@ export default function AdminLoginPage() {
           {/* Header */}
           <div className="text-center mb-6">
             <h1 className="text-2xl font-bold tracking-widest" style={{ color: "#c8956c" }}>
-              LEO SHOP
+              {siteName}
             </h1>
             <p className="text-xs text-base-content/50 uppercase tracking-[0.3em] mt-1">
               Admin Panel

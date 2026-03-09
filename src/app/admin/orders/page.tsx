@@ -11,14 +11,14 @@ import { formatCurrency, formatDate } from "@/lib/format";
 import React from "react";
 
 const statusConfig: Record<string, { label: string; bg: string; text: string }> = {
-  PENDING: { label: "待處理", bg: "bg-amber-50", text: "text-amber-600" },
-  PAID: { label: "已確認", bg: "bg-blue-50", text: "text-blue-600" },
-  PROCESSING: { label: "處理中", bg: "bg-yellow-50", text: "text-yellow-600" },
-  CONFIRMED: { label: "已確認", bg: "bg-blue-50", text: "text-blue-600" },
-  SHIPPED: { label: "已出貨", bg: "bg-indigo-50", text: "text-indigo-600" },
-  DELIVERED: { label: "已送達", bg: "bg-emerald-50", text: "text-emerald-600" },
-  COMPLETED: { label: "已完成", bg: "bg-emerald-50", text: "text-emerald-600" },
-  CANCELLED: { label: "已取消", bg: "bg-red-50", text: "text-red-500" },
+  PENDING: { label: "待處理", bg: "bg-amber-50 border-amber-200", text: "text-amber-600" },
+  PAID: { label: "已確認", bg: "bg-blue-50 border-blue-200", text: "text-blue-600" },
+  PROCESSING: { label: "處理中", bg: "bg-yellow-50 border-yellow-200", text: "text-yellow-600" },
+  CONFIRMED: { label: "已確認", bg: "bg-blue-50 border-blue-200", text: "text-blue-600" },
+  SHIPPED: { label: "已出貨", bg: "bg-indigo-50 border-indigo-200", text: "text-indigo-600" },
+  DELIVERED: { label: "已送達", bg: "bg-emerald-50 border-emerald-200", text: "text-emerald-600" },
+  COMPLETED: { label: "已完成", bg: "bg-emerald-50 border-emerald-200", text: "text-emerald-600" },
+  CANCELLED: { label: "已取消", bg: "bg-red-50 border-red-200", text: "text-red-500" },
 };
 
 const allStatuses = ["all", "PENDING", "PAID", "PROCESSING", "SHIPPED", "COMPLETED", "CANCELLED"] as const;
@@ -138,65 +138,63 @@ export default function AdminOrders() {
       <h1 className="text-2xl font-bold">訂單管理</h1>
 
       {/* 篩選區域 */}
-      <div className="card bg-base-100 shadow-sm">
-        <div className="card-body">
-          <div className="flex flex-wrap items-end gap-3">
-            {/* 搜尋框 */}
-            <div className="flex-1 min-w-[200px]">
-              <label className="text-xs text-base-content/60 mb-1 block">訂單編號</label>
-              <input
-                type="text"
-                placeholder="搜尋訂單編號..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                className="input input-bordered w-full input-sm"
-              />
-            </div>
-
-            {/* 開始日期 */}
-            <div className="min-w-[140px]">
-              <label className="text-xs text-base-content/60 mb-1 block">開始日期</label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="input input-bordered w-full input-sm"
-              />
-            </div>
-
-            {/* 結束日期 */}
-            <div className="min-w-[140px]">
-              <label className="text-xs text-base-content/60 mb-1 block">結束日期</label>
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="input input-bordered w-full input-sm"
-              />
-            </div>
-
-            {/* 每頁筆數 */}
-            <div className="min-w-[120px]">
-              <label className="text-xs text-base-content/60 mb-1 block">每頁筆數</label>
-              <select
-                value={pageSize}
-                onChange={(e) => handlePageSizeChange(Number(e.target.value))}
-                className="select select-bordered w-full select-sm"
-              >
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-                <option value={200}>200</option>
-              </select>
-            </div>
-
-            {/* 搜尋按鈕 */}
-            <button onClick={handleSearch} className="btn btn-primary btn-sm">
-              搜尋
-            </button>
+      <div className="bg-base-100 border border-base-200 rounded-2xl p-5">
+        <div className="flex flex-wrap items-end gap-3">
+          {/* 搜尋框 */}
+          <div className="flex-1 min-w-[200px]">
+            <label className="text-xs text-base-content/60 mb-1 block">訂單編號</label>
+            <input
+              type="text"
+              placeholder="搜尋訂單編號..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+              className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors"
+            />
           </div>
+
+          {/* 開始日期 */}
+          <div className="min-w-[140px]">
+            <label className="text-xs text-base-content/60 mb-1 block">開始日期</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors"
+            />
+          </div>
+
+          {/* 結束日期 */}
+          <div className="min-w-[140px]">
+            <label className="text-xs text-base-content/60 mb-1 block">結束日期</label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors"
+            />
+          </div>
+
+          {/* 每頁筆數 */}
+          <div className="min-w-[120px]">
+            <label className="text-xs text-base-content/60 mb-1 block">每頁筆數</label>
+            <select
+              value={pageSize}
+              onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+              className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors"
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+              <option value={200}>200</option>
+            </select>
+          </div>
+
+          {/* 搜尋按鈕 */}
+          <button onClick={handleSearch} className="inline-flex items-center px-5 py-2 rounded-full text-sm font-medium bg-[#0071e3] text-white hover:bg-[#0077ED] transition-colors cursor-pointer">
+            搜尋
+          </button>
         </div>
       </div>
 
@@ -218,14 +216,14 @@ export default function AdminOrders() {
         </div>
       ) : (
         <>
-          <div className="card bg-base-100 shadow-sm">
+          <div className="bg-base-100 border border-base-200 rounded-2xl overflow-hidden">
             <div className="card-body p-0">
               <div className="overflow-x-auto">
                 <table className="table">
                   <thead>
                     <tr>
-                      <th>訂單編號</th><th>客戶</th><th>日期</th>
-                      <th className="text-right">金額</th><th>狀態</th><th className="w-[50px]" />
+                      <th className="text-center">訂單編號</th><th className="text-center">客戶</th><th className="text-center">日期</th>
+                      <th className="text-center">金額</th><th className="text-center">狀態</th><th className="w-[50px]" />
                     </tr>
                   </thead>
                   <tbody>
@@ -240,22 +238,22 @@ export default function AdminOrders() {
                             onClick={() => setExpandedId(expandedId === String(order.id) ? null : String(order.id))}
                             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setExpandedId(expandedId === String(order.id) ? null : String(order.id)); } }}
                           >
-                            <td className="font-mono text-sm">{order.orderNumber}</td>
-                            <td>{getOrderName(order)}</td>
-                            <td className="text-base-content/50">{formatDate(getOrderDate(order))}</td>
-                            <td className="text-right font-medium tabular-nums">{formatCurrency(getOrderTotal(order))}</td>
-                            <td>
+                            <td className="text-center font-mono text-sm">{order.orderNumber}</td>
+                            <td className="text-center">{getOrderName(order)}</td>
+                            <td className="text-center text-base-content/50">{formatDate(getOrderDate(order))}</td>
+                            <td className="text-center font-medium tabular-nums">{formatCurrency(getOrderTotal(order))}</td>
+                            <td className="text-center">
                               {statusConfig[order.status] ? (
-                                <span className={`inline-block min-w-[60px] px-3 py-1.5 rounded-full text-xs font-medium text-center ${statusConfig[order.status].bg} ${statusConfig[order.status].text}`}>
+                                <span className={`inline-flex items-center justify-center min-w-[60px] px-3 py-1 rounded-full text-xs font-medium border ${statusConfig[order.status].bg} ${statusConfig[order.status].text}`}>
                                   {statusConfig[order.status].label}
                                 </span>
                               ) : (
-                                <span className="inline-block min-w-[60px] px-3 py-1.5 rounded-full text-xs font-medium text-center bg-gray-100 text-gray-600">
+                                <span className="inline-flex items-center justify-center min-w-[60px] px-3 py-1 rounded-full text-xs font-medium border border-gray-200 bg-gray-50 text-gray-500">
                                   {order.status}
                                 </span>
                               )}
                             </td>
-                            <td>{expandedId === String(order.id) ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}</td>
+                            <td className="text-center">{expandedId === String(order.id) ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}</td>
                           </tr>
                           {expandedId === String(order.id) && (
                             <tr key={`${order.id}-detail`}>
@@ -272,7 +270,7 @@ export default function AdminOrders() {
                                   {(order.paymentMethod === "CRYPTO_DIRECT" || order.paymentMethod === "CRYPTO") && (
                                     <div className="flex items-center gap-2 text-sm">
                                       <span className="text-base-content/50">付款方式：</span>
-                                      <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-violet-50 text-violet-600">加密貨幣</span>
+                                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border border-violet-200 bg-violet-50 text-violet-600">加密貨幣</span>
                                       {order.cryptoPaymentId && (
                                         <Link href={`/admin/crypto-orders?orderNumber=${order.orderNumber}`}
                                           className="text-primary text-xs hover:underline">

@@ -12,7 +12,6 @@ export default function Home() {
     return (
       <>
         <Home2.SliderTwo />
-        <Home2.CollectionGrid />
         <Home2.PromoBanner />
         <Home2.CollectionSlider />
         <Home2.BestSellers />

@@ -15,13 +15,13 @@ const iconMap: Record<string, React.ElementType> = {
 };
 
 const statusConfig: Record<string, { label: string; bg: string; text: string }> = {
-  PENDING: { label: "待處理", bg: "bg-amber-50", text: "text-amber-600" },
-  PAID: { label: "已付款", bg: "bg-emerald-50", text: "text-emerald-600" },
-  PROCESSING: { label: "處理中", bg: "bg-yellow-50", text: "text-yellow-600" },
-  CONFIRMED: { label: "已確認", bg: "bg-blue-50", text: "text-blue-600" },
-  SHIPPED: { label: "已出貨", bg: "bg-indigo-50", text: "text-indigo-600" },
-  DELIVERED: { label: "已送達", bg: "bg-emerald-50", text: "text-emerald-600" },
-  COMPLETED: { label: "已完成", bg: "bg-emerald-50", text: "text-emerald-600" },
+  PENDING: { label: "待處理", bg: "bg-amber-50 border-amber-200", text: "text-amber-600" },
+  PAID: { label: "已付款", bg: "bg-emerald-50 border-emerald-200", text: "text-emerald-600" },
+  PROCESSING: { label: "處理中", bg: "bg-yellow-50 border-yellow-200", text: "text-yellow-600" },
+  CONFIRMED: { label: "已確認", bg: "bg-blue-50 border-blue-200", text: "text-blue-600" },
+  SHIPPED: { label: "已出貨", bg: "bg-indigo-50 border-indigo-200", text: "text-indigo-600" },
+  DELIVERED: { label: "已送達", bg: "bg-emerald-50 border-emerald-200", text: "text-emerald-600" },
+  COMPLETED: { label: "已完成", bg: "bg-emerald-50 border-emerald-200", text: "text-emerald-600" },
   CANCELLED: { label: "已取消", bg: "bg-red-50", text: "text-red-500" },
   processing: { label: "處理中", bg: "bg-yellow-50", text: "text-yellow-600" },
   shipped: { label: "已出貨", bg: "bg-indigo-50", text: "text-indigo-600" },
@@ -103,7 +103,7 @@ export default function AdminDashboard() {
         {stats.map((stat) => {
           const Icon = iconMap[stat.icon] || DollarSign;
           return (
-            <div key={stat.title} className="stat bg-base-100 rounded-box shadow-sm">
+            <div key={stat.title} className="stat bg-base-100 border border-base-200 rounded-2xl">
               <div className="stat-figure text-primary">
                 <Icon className="w-6 h-6" />
               </div>
@@ -124,7 +124,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Revenue Chart */}
-      <div className="card bg-base-100 shadow-sm">
+      <div className="bg-base-100 border border-base-200 rounded-2xl">
         <div className="card-body">
           <h2 className="card-title text-base">營收趨勢（近 7 天）</h2>
           <div className="h-[300px]">
@@ -142,34 +142,34 @@ export default function AdminDashboard() {
       </div>
 
       {/* Recent Orders */}
-      <div className="card bg-base-100 shadow-sm">
+      <div className="bg-base-100 border border-base-200 rounded-2xl">
         <div className="card-body">
           <h2 className="card-title text-base">最近訂單</h2>
           <div className="overflow-x-auto">
             <table className="table">
               <thead>
                 <tr>
-                  <th>訂單編號</th>
-                  <th>客戶</th>
-                  <th>日期</th>
-                  <th className="text-right">金額</th>
-                  <th>狀態</th>
+                  <th className="text-center">訂單編號</th>
+                  <th className="text-center">客戶</th>
+                  <th className="text-center">日期</th>
+                  <th className="text-center">金額</th>
+                  <th className="text-center">狀態</th>
                 </tr>
               </thead>
               <tbody>
                 {recentOrders.map((order) => (
                   <tr key={order.id}>
-                    <td className="font-mono text-sm">{order.orderNumber}</td>
-                    <td>{order.customerName || order.shippingName || '-'}</td>
-                    <td className="text-base-content/50">{formatDate(order.createdAt?.split('T')[0] || order.date || '')}</td>
-                    <td className="text-right font-medium tabular-nums">{formatCurrency(order.totalAmount || order.total || 0)}</td>
-                    <td>
+                    <td className="text-center font-mono text-sm">{order.orderNumber}</td>
+                    <td className="text-center">{order.customerName || order.shippingName || '-'}</td>
+                    <td className="text-center text-base-content/50">{formatDate(order.createdAt?.split('T')[0] || order.date || '')}</td>
+                    <td className="text-center font-medium tabular-nums">{formatCurrency(order.totalAmount || order.total || 0)}</td>
+                    <td className="text-center">
                       {statusConfig[order.status] ? (
-                        <span className={`inline-block min-w-[60px] px-3 py-1.5 rounded-full text-xs font-medium text-center ${statusConfig[order.status].bg} ${statusConfig[order.status].text}`}>
+                        <span className={`inline-flex items-center justify-center min-w-[60px] px-3 py-1 rounded-full text-xs font-medium border ${statusConfig[order.status].bg} ${statusConfig[order.status].text}`}>
                           {statusConfig[order.status].label}
                         </span>
                       ) : (
-                        <span className="inline-block min-w-[60px] px-3 py-1.5 rounded-full text-xs font-medium text-center bg-gray-100 text-gray-600">
+                        <span className="inline-flex items-center justify-center min-w-[60px] px-3 py-1 rounded-full text-xs font-medium border bg-gray-100 text-gray-600">
                           {order.status}
                         </span>
                       )}

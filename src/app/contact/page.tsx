@@ -24,7 +24,7 @@ export default function ContactPage() {
   };
 
   const inputClass =
-    "w-full px-4 py-3 border border-border text-sm focus:outline-none focus:border-foreground transition-colors";
+    "w-full px-4 py-3 border border-base-300 bg-gray-50 rounded-xl text-sm focus:outline-none focus:border-gray-400 transition-colors";
 
   return (
     <Container>
@@ -51,7 +51,7 @@ export default function ContactPage() {
                 required
                 className={`${inputClass} resize-none`}
               />
-              <Button className="w-full">{t("send")}</Button>
+              <button type="submit" className="w-full bg-foreground text-white py-3 text-sm tracking-wider hover:bg-foreground/90 transition-colors rounded-xl cursor-pointer">{t("send")}</button>
             </form>
           )}
         </div>
@@ -60,7 +60,7 @@ export default function ContactPage() {
           <h2 className="text-sm font-medium tracking-wider">{t("getInTouch")}</h2>
           {contactInfo.map((item) => (
             <div key={item.label} className="flex gap-4">
-              <div className="w-10 h-10 shrink-0 flex items-center justify-center border border-border text-primary">
+              <div className="w-10 h-10 shrink-0 flex items-center justify-center border border-base-300 rounded-xl text-primary">
                 <item.icon className="w-5 h-5" strokeWidth={1.5} />
               </div>
               <div>

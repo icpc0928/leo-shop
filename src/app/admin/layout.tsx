@@ -5,12 +5,14 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import AdminAuthGuard from "@/components/admin/AdminAuthGuard";
 import { clearAdminSession } from "@/app/admin/login/page";
-import { LayoutDashboard, Package, ClipboardList, Users, LogOut, Store, Menu, Wallet, Bitcoin, Shield, Settings } from "lucide-react";
+import { LayoutDashboard, Package, ClipboardList, Users, LogOut, Store, Menu, Wallet, Bitcoin, Shield, Settings, Tags } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useSiteInfo } from "@/contexts/SiteContext";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { label: "Products", href: "/admin/products", icon: Package },
+  { label: "商品分類", href: "/admin/categories", icon: Tags },
   { label: "Orders", href: "/admin/orders", icon: ClipboardList },
   { label: "Users", href: "/admin/users", icon: Users },
   { label: "管理員", href: "/admin/admin-users", icon: Shield },
@@ -20,10 +22,11 @@ const navItems = [
 ];
 
 function Sidebar({ pathname }: { pathname: string }) {
+  const { siteName } = useSiteInfo();
   return (
     <div className="flex flex-col h-full bg-neutral text-neutral-content">
       <div className="p-6 border-b border-neutral-content/20">
-        <h1 className="text-xl font-bold tracking-wider">LEO SHOP</h1>
+        <h1 className="text-xl font-bold tracking-wider">{siteName}</h1>
         <span className="text-xs opacity-60 uppercase tracking-widest">Admin Panel</span>
       </div>
       <ul className="menu flex-1 p-4 gap-1">

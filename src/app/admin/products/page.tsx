@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Pencil, Trash2, Search } from "lucide-react";
 import { mockProducts, categories as mockCategories } from "@/lib/mockData";
-import { productAPI, adminProductAPI } from "@/lib/api";
+import { productAPI, adminProductAPI, categoryAPI } from "@/lib/api";
 import { resolveImageUrl } from "@/lib/mappers";
 import ImageUploader from "@/components/admin/ImageUploader";
 import { formatCurrency } from "@/lib/format";
@@ -81,10 +81,17 @@ export default function AdminProducts() {
 
   const fetchCategories = async () => {
     try {
-      const cats = await productAPI.getCategories();
-      setCategories(cats);
+      const data = await categoryAPI.getAll();
+      const categoryNames = Array.isArray(data) ? data.map((c: any) => c.name) : [];
+      setCategories(categoryNames);
     } catch {
-      // keep mock categories
+      // Fallback to product API
+      try {
+        const cats = await productAPI.getCategories();
+        setCategories(cats);
+      } catch {
+        // keep mock categories
+      }
     }
   };
 
@@ -165,60 +172,58 @@ export default function AdminProducts() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">商品管理</h1>
-        <button onClick={openAdd} className="btn btn-primary btn-sm gap-2">
+        <button onClick={openAdd} className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium bg-[#0071e3] text-white hover:bg-[#0077ED] transition-colors">
           <Plus size={16} /> 新增商品
         </button>
       </div>
 
       {/* Search */}
-      <div className="form-control">
-        <div className="input-group flex">
-          <span className="bg-base-200 flex items-center px-3"><Search className="w-4 h-4 text-base-content/40" /></span>
-          <input type="text" placeholder="搜尋商品名稱或分類…" value={search} name="search" autoComplete="off" aria-label="搜尋商品"
-            onChange={(e) => setSearch(e.target.value)} className="input input-bordered flex-1" />
-        </div>
+      <div className="relative">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/40" />
+        <input type="text" placeholder="搜尋商品名稱或分類…" value={search} name="search" autoComplete="off" aria-label="搜尋商品"
+          onChange={(e) => setSearch(e.target.value)} className="w-full pl-11 pr-4 py-3 border border-base-200 rounded-2xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors" />
       </div>
 
       {/* Table */}
-      <div className="card bg-base-100 shadow-sm">
+      <div className="card bg-base-100 border border-base-200 rounded-2xl overflow-hidden">
         <div className="card-body p-0">
           <div className="overflow-x-auto">
             <table className="table">
               <thead>
                 <tr>
-                  <th className="w-[60px]">圖片</th>
-                  <th>名稱</th>
-                  <th>分類</th>
-                  <th className="text-right">價格</th>
-                  <th className="text-right">庫存</th>
-                  <th>狀態</th>
-                  <th className="text-right">操作</th>
+                  <th className="w-[60px] text-center">圖片</th>
+                  <th className="text-center">名稱</th>
+                  <th className="text-center">分類</th>
+                  <th className="text-center">價格</th>
+                  <th className="text-center">庫存</th>
+                  <th className="text-center">狀態</th>
+                  <th className="text-center">操作</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((product) => (
                   <tr key={product.id}>
-                    <td>
+                    <td className="text-center">
                       <Image src={resolveImageUrl(product.images?.[0] || product.imageUrl || "https://picsum.photos/40/40")} alt={product.name} width={40} height={40} className="rounded object-cover" />
                     </td>
-                    <td className="font-medium">{product.name}</td>
-                    <td className="text-base-content/50">{product.category}</td>
-                    <td className="text-right tabular-nums">{formatCurrency(product.price)}</td>
-                    <td className="text-right">{product.stock}</td>
-                    <td>
-                      <span className={`inline-block min-w-[60px] px-3 py-1.5 rounded-full text-xs font-medium text-center ${
-                        product.active !== false ? "bg-emerald-50 text-emerald-600" : "bg-gray-100 text-gray-500"
+                    <td className="text-center font-medium">{product.name}</td>
+                    <td className="text-center text-base-content/50">{product.category}</td>
+                    <td className="text-center tabular-nums">{formatCurrency(product.price)}</td>
+                    <td className="text-center">{product.stock}</td>
+                    <td className="text-center">
+                      <span className={`inline-flex items-center justify-center min-w-[60px] px-3 py-1 rounded-full text-xs font-medium border ${
+                        product.active !== false ? "border-emerald-200 bg-emerald-50 text-emerald-600" : "border-gray-200 bg-gray-50 text-gray-400"
                       }`}>
                         {product.active !== false ? "上架" : "下架"}
                       </span>
                     </td>
-                    <td className="text-right">
+                    <td className="text-center">
                       <div className="flex items-center justify-end gap-1">
-                        <button onClick={() => openEdit(product)} className="btn btn-ghost btn-xs btn-square" aria-label="Edit product">
+                        <button onClick={() => openEdit(product)} className="w-8 h-8 rounded-full inline-flex items-center justify-center border border-gray-300 text-base-content/60 hover:bg-gray-300 transition-colors cursor-pointer" aria-label="Edit product">
                           <Pencil size={14} aria-hidden="true" />
                         </button>
                         <button onClick={() => { setDeletingId(product.id); setDeleteDialogOpen(true); }}
-                          className="btn btn-ghost btn-xs btn-square text-error" aria-label="Delete product">
+                          className="w-8 h-8 rounded-full inline-flex items-center justify-center border border-error/30 text-error/60 hover:bg-error/10 transition-colors cursor-pointer" aria-label="Delete product">
                           <Trash2 size={14} aria-hidden="true" />
                         </button>
                       </div>
@@ -237,41 +242,60 @@ export default function AdminProducts() {
           <DialogHeader>
             <DialogTitle>{editingId ? "編輯商品" : "新增商品"}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="form-control"><label className="label"><span className="label-text">名稱</span></label>
-              <input className="input input-bordered w-full" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
-            <div className="form-control"><label className="label"><span className="label-text">Slug</span></label>
-              <input className="input input-bordered w-full" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} /></div>
-            <div className="form-control"><label className="label"><span className="label-text">描述</span></label>
-              <textarea className="textarea textarea-bordered w-full" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="form-control"><label className="label"><span className="label-text">價格</span></label>
-                <input type="number" className="input input-bordered w-full" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} /></div>
-              <div className="form-control"><label className="label"><span className="label-text">比較價</span></label>
-                <input type="number" className="input input-bordered w-full" value={form.comparePrice} onChange={(e) => setForm({ ...form, comparePrice: e.target.value })} /></div>
+          <div className="space-y-5 py-4">
+            <div>
+              <label className="text-xs text-base-content/60 mb-1 block">名稱</label>
+              <input className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            </div>
+            <div>
+              <label className="text-xs text-base-content/60 mb-1 block">Slug</label>
+              <input className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} />
+            </div>
+            <div>
+              <label className="text-xs text-base-content/60 mb-1 block">描述</label>
+              <textarea className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors min-h-[80px]" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="form-control"><label className="label"><span className="label-text">分類</span></label>
+              <div>
+                <label className="text-xs text-base-content/60 mb-1 block">價格</label>
+                <input type="number" className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
+              </div>
+              <div>
+                <label className="text-xs text-base-content/60 mb-1 block">比較價</label>
+                <input type="number" className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors" value={form.comparePrice} onChange={(e) => setForm({ ...form, comparePrice: e.target.value })} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs text-base-content/60 mb-1 block">分類</label>
                 <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
-                  <SelectTrigger><SelectValue placeholder="選擇分類" /></SelectTrigger>
+                  <SelectTrigger className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm"><SelectValue placeholder="選擇分類" /></SelectTrigger>
                   <SelectContent>{categories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
-                </Select></div>
-              <div className="form-control"><label className="label"><span className="label-text">庫存</span></label>
-                <input type="number" className="input input-bordered w-full" value={form.stock} onChange={(e) => setForm({ ...form, stock: e.target.value })} /></div>
+                </Select>
+              </div>
+              <div>
+                <label className="text-xs text-base-content/60 mb-1 block">庫存</label>
+                <input type="number" className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors" value={form.stock} onChange={(e) => setForm({ ...form, stock: e.target.value })} />
+              </div>
             </div>
-            <div className="form-control"><label className="label"><span className="label-text">商品圖片</span></label>
+            <div>
+              <label className="text-xs text-base-content/60 mb-1 block">商品圖片</label>
               <ImageUploader
                 existingImages={form.imageUrls}
                 onChange={(urls) => setForm({ ...form, imageUrls: urls })}
-              /></div>
-            <label className="label cursor-pointer justify-start gap-2">
-              <input type="checkbox" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} className="checkbox checkbox-sm checkbox-primary" />
-              <span className="label-text">啟用</span>
-            </label>
+              />
+            </div>
+            <div className="flex items-center justify-between border border-base-200 rounded-xl px-4 py-3">
+              <span className="text-sm">商品啟用</span>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} className="sr-only peer" />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+              </label>
+            </div>
           </div>
           <DialogFooter>
-            <button onClick={() => setDialogOpen(false)} className="btn btn-ghost btn-sm">取消</button>
-            <button onClick={handleSave} disabled={saving} className="btn btn-primary btn-sm">
+            <button onClick={() => setDialogOpen(false)} className="inline-flex items-center px-5 py-2 rounded-full text-sm font-medium border border-gray-300 text-base-content/70 hover:bg-gray-100 transition-colors cursor-pointer">取消</button>
+            <button onClick={handleSave} disabled={saving} className="inline-flex items-center px-5 py-2 rounded-full text-sm font-medium bg-[#0071e3] text-white hover:bg-[#0077ED] transition-colors cursor-pointer">
               {saving ? <span className="loading loading-spinner loading-xs" /> : null}
               儲存
             </button>
@@ -285,8 +309,8 @@ export default function AdminProducts() {
           <DialogHeader><DialogTitle>確認刪除</DialogTitle></DialogHeader>
           <p className="text-sm text-base-content/60 py-4">確定要刪除此商品嗎？此操作無法復原。</p>
           <DialogFooter>
-            <button onClick={() => setDeleteDialogOpen(false)} className="btn btn-ghost btn-sm">取消</button>
-            <button onClick={handleDelete} className="btn btn-error btn-sm">刪除</button>
+            <button onClick={() => setDeleteDialogOpen(false)} className="inline-flex items-center px-5 py-2 rounded-full text-sm font-medium border border-gray-300 text-base-content/70 hover:bg-gray-100 transition-colors cursor-pointer">取消</button>
+            <button onClick={handleDelete} className="inline-flex items-center px-5 py-2 rounded-full text-sm font-medium border border-red-200 bg-red-50 text-red-500 hover:bg-red-100 transition-colors cursor-pointer">刪除</button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

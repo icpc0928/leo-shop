@@ -40,7 +40,7 @@ export default function AccountPage() {
             <Link
               key={card.href}
               href={card.href}
-              className="border border-border p-6 hover:border-foreground transition-colors group"
+              className="border border-base-200 p-6 rounded-2xl hover:border-gray-400 transition-colors group cursor-pointer"
             >
               <card.icon className="w-6 h-6 mb-3 text-muted group-hover:text-foreground transition-colors" strokeWidth={1.5} aria-hidden="true" />
               <h3 className="font-medium mb-1">{card.label}</h3>
@@ -49,7 +49,7 @@ export default function AccountPage() {
           ))}
           <button
             onClick={handleLogout}
-            className="border border-border p-6 hover:border-red-400 transition-colors group text-left"
+            className="border border-base-200 p-6 rounded-2xl hover:border-red-400 transition-colors group text-left cursor-pointer"
           >
             <LogOut className="w-6 h-6 mb-3 text-muted group-hover:text-red-500 transition-colors" strokeWidth={1.5} aria-hidden="true" />
             <h3 className="font-medium mb-1">{t("logout")}</h3>

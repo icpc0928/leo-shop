@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { User } from "@/types";
 import { authAPI, userAPI, setToken, removeToken } from "@/lib/api";
+import { useWishlistStore } from "./wishlistStore";
 
 interface AuthState {
   user: User | null;
@@ -25,6 +26,8 @@ export const useAuthStore = create<AuthState>()(
           const res = await authAPI.login(email, password);
           setToken(res.token);
           set({ user: res.user, isLoggedIn: true });
+          // Fetch wishlist after login
+          useWishlistStore.getState().syncAfterLogin();
           return { success: true };
         } catch (e: unknown) {
           // Fallback mock login
@@ -47,6 +50,8 @@ export const useAuthStore = create<AuthState>()(
           const res = await authAPI.register(name, email, password);
           setToken(res.token);
           set({ user: res.user, isLoggedIn: true });
+          // Fetch wishlist after register
+          useWishlistStore.getState().syncAfterLogin();
           return { success: true };
         } catch (e: unknown) {
           const message = e instanceof Error ? e.message : 'Registration failed';
@@ -71,6 +76,8 @@ export const useAuthStore = create<AuthState>()(
       logout: () => {
         removeToken();
         set({ user: null, isLoggedIn: false });
+        // Clear wishlist on logout
+        useWishlistStore.getState().clearWishlist();
       },
 
       updateProfile: async (data: Partial<User>) => {

@@ -71,47 +71,47 @@ export default function ProfilePage() {
           <div>
             <label className="block text-sm mb-1">{t("name")}</label>
             <input type="text" value={name} onChange={(e) => setName(e.target.value)}
-              className="w-full border border-border px-4 py-2.5 text-sm focus:outline-none focus:border-foreground" />
+              className="w-full border border-base-300 px-4 py-2.5 text-sm rounded-xl bg-gray-50 focus:outline-none focus:border-gray-400 transition-colors" />
           </div>
           <div>
             <label className="block text-sm mb-1">{t("email")}</label>
             <input type="email" value={email} disabled
-              className="w-full border border-border px-4 py-2.5 text-sm bg-gray-50 text-muted" />
+              className="w-full border border-base-300 px-4 py-2.5 text-sm bg-gray-50 text-muted rounded-xl" />
           </div>
           <div>
             <label className="block text-sm mb-1">{t("phone")}</label>
             <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)}
-              className="w-full border border-border px-4 py-2.5 text-sm focus:outline-none focus:border-foreground" />
+              className="w-full border border-base-300 px-4 py-2.5 text-sm rounded-xl bg-gray-50 focus:outline-none focus:border-gray-400 transition-colors" />
           </div>
 
           <button type="submit" disabled={saving}
-            className="w-full bg-foreground text-white py-3 text-sm tracking-wider hover:bg-foreground/90 transition-colors disabled:opacity-50">
+            className="w-full bg-foreground text-white py-3 text-sm tracking-wider hover:bg-foreground/90 transition-colors disabled:opacity-50 rounded-xl cursor-pointer">
             {saving ? t("saving") : saved ? t("saved") : t("save")}
           </button>
         </form>
 
         <hr className="my-8" />
         <h2 className="text-lg font-serif mb-4">{t("changePassword")}</h2>
-        {passwordMsg && <div className="alert alert-success text-sm mb-4">{passwordMsg}</div>}
-        {passwordError && <div className="alert alert-error text-sm mb-4">{passwordError}</div>}
+        {passwordMsg && <div className="text-sm mb-4 px-4 py-2.5 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-600">{passwordMsg}</div>}
+        {passwordError && <div className="text-sm mb-4 px-4 py-2.5 rounded-xl border border-red-200 bg-red-50 text-red-500">{passwordError}</div>}
         <div className="space-y-5">
           <div>
             <label className="block text-sm mb-1">{t("oldPassword")}</label>
             <input type="password" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)}
-              className="w-full border border-border px-4 py-2.5 text-sm focus:outline-none focus:border-foreground" />
+              className="w-full border border-base-300 px-4 py-2.5 text-sm rounded-xl bg-gray-50 focus:outline-none focus:border-gray-400 transition-colors" />
           </div>
           <div>
             <label className="block text-sm mb-1">{t("newPassword")}</label>
             <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full border border-border px-4 py-2.5 text-sm focus:outline-none focus:border-foreground" />
+              className="w-full border border-base-300 px-4 py-2.5 text-sm rounded-xl bg-gray-50 focus:outline-none focus:border-gray-400 transition-colors" />
           </div>
           <div>
             <label className="block text-sm mb-1">{t("confirmNewPassword")}</label>
             <input type="password" value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)}
-              className="w-full border border-border px-4 py-2.5 text-sm focus:outline-none focus:border-foreground" />
+              className="w-full border border-base-300 px-4 py-2.5 text-sm rounded-xl bg-gray-50 focus:outline-none focus:border-gray-400 transition-colors" />
           </div>
           <button type="button" onClick={handleChangePassword}
-            className="w-full border border-border py-3 text-sm tracking-wider hover:border-foreground transition-colors">
+            className="w-full border border-base-300 bg-gray-50 py-3 text-sm tracking-wider hover:bg-gray-100 transition-colors rounded-xl cursor-pointer">
             {t("changePassword")}
           </button>
         </div>

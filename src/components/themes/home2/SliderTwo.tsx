@@ -17,7 +17,7 @@ const slides: Slide[] = [
     id: 1,
     title: 'Handcrafted Elegance',
     subtitle: 'Discover unique pieces that tell a story',
-    cta: 'Shop Now',
+    cta: '立即選購',
     bgColor: '#EEE5DD',
     imageUrl: 'https://picsum.photos/600/600?random=1',
   },
@@ -25,7 +25,7 @@ const slides: Slide[] = [
     id: 2,
     title: 'Artisan Collection',
     subtitle: 'Curated designs for your home',
-    cta: 'Explore',
+    cta: '立即選購',
     bgColor: '#F5F1F1',
     imageUrl: 'https://picsum.photos/600/600?random=2',
   },
@@ -33,7 +33,7 @@ const slides: Slide[] = [
     id: 3,
     title: 'Timeless Beauty',
     subtitle: 'Quality craftsmanship meets modern design',
-    cta: 'View Collection',
+    cta: '立即選購',
     bgColor: '#F1DED0',
     imageUrl: 'https://picsum.photos/600/600?random=3',
   },
@@ -75,8 +75,8 @@ export default function SliderTwo() {
                     {slide.subtitle}
                   </p>
                   <Link
-                    href="/shop"
-                    className="inline-block bg-[#72a499] text-white px-8 py-3 rounded-lg hover:bg-[#5e8a80] transition-colors"
+                    href="/products"
+                    className="inline-block bg-[var(--home2-primary)] text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity"
                   >
                     {slide.cta}
                   </Link>

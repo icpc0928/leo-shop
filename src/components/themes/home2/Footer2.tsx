@@ -4,6 +4,7 @@ import Link from "next/link";
 import Container from "@/components/ui/Container";
 import { useTranslations } from "next-intl";
 import { ArrowUp, Facebook, Instagram, Twitter, Mail } from "lucide-react";
+import { useSiteInfo } from "@/contexts/SiteContext";
 import "./theme.css";
 
 const aboutLinks = [
@@ -30,6 +31,7 @@ const serviceLinks = [
 
 export default function Footer2() {
   const t = useTranslations();
+  const { siteName } = useSiteInfo();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -154,10 +156,10 @@ export default function Footer2() {
               <input
                 type="email"
                 placeholder={t("footer.emailPlaceholder")}
-                className="flex-1 px-4 py-2.5 text-sm border border-[var(--home2-border)] focus:outline-none focus:border-[var(--home2-primary)] transition-colors"
+                className="flex-1 px-4 py-2.5 text-sm border border-[var(--home2-border)] rounded-full focus:outline-none focus:border-[var(--home2-primary)] transition-colors"
                 aria-label="Email address"
               />
-              <button className="px-6 py-2.5 bg-[var(--home2-primary)] text-white text-sm font-medium tracking-wide hover:bg-[var(--home2-primary-hover)] transition-colors flex items-center gap-2">
+              <button className="px-6 py-2.5 bg-[var(--home2-primary)] text-white text-sm font-medium tracking-wide hover:bg-[var(--home2-primary-hover)] transition-colors flex items-center gap-2 rounded-full">
                 <Mail className="w-4 h-4" strokeWidth={1.5} />
                 {t("footer.subscribe")}
               </button>
@@ -169,21 +171,10 @@ export default function Footer2() {
         <div className="home2-footer-bottom">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--home2-text-light)]">
             <p>
-              {t("footer.copyright", { year: new Date().getFullYear() })}
+              © {new Date().getFullYear()} {siteName}. All rights reserved.
             </p>
 
-            {/* Payment Methods */}
-            <div className="flex items-center gap-2">
-              <span className="mr-2">{t("footer.payment")}:</span>
-              {["Visa", "Mastercard", "JCB", "LINE Pay"].map((method) => (
-                <span
-                  key={method}
-                  className="px-2 py-1 bg-white border border-[var(--home2-border)] rounded text-[10px] font-medium"
-                >
-                  {method}
-                </span>
-              ))}
-            </div>
+{/* Payment Methods removed */}
 
             {/* Back to Top */}
             <button

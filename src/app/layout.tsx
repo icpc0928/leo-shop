@@ -4,6 +4,7 @@ import LayoutWrapper from "@/components/layout/LayoutWrapper";
 import IntlProvider from "@/components/providers/IntlProvider";
 import ThemeProvider from "@/components/providers/ThemeProvider";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
+import { SiteProvider } from "@/contexts/SiteContext";
 import "./globals.css";
 
 const inter = Inter({
@@ -35,11 +36,13 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
         <ThemeProvider />
-        <IntlProvider>
-          <CurrencyProvider>
-            <LayoutWrapper>{children}</LayoutWrapper>
-          </CurrencyProvider>
-        </IntlProvider>
+        <SiteProvider>
+          <IntlProvider>
+            <CurrencyProvider>
+              <LayoutWrapper>{children}</LayoutWrapper>
+            </CurrencyProvider>
+          </IntlProvider>
+        </SiteProvider>
       </body>
     </html>
   );

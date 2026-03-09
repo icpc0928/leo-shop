@@ -4,6 +4,7 @@ import Link from "next/link";
 import Container from "@/components/ui/Container";
 import { useTranslations } from "next-intl";
 import { ArrowUp } from "lucide-react";
+import { useSiteInfo } from "@/contexts/SiteContext";
 
 const quickLinkKeys = [
   { href: "/products", key: "products" },
@@ -15,6 +16,7 @@ const quickLinkKeys = [
 export default function Footer() {
   const t = useTranslations();
 
+  const { siteName } = useSiteInfo();
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -25,7 +27,7 @@ export default function Footer() {
         <div className="footer p-10 text-neutral-content">
           {/* Store Info */}
           <nav>
-            <h6 className="footer-title text-lg font-serif tracking-[0.15em]">{t("common.shopName")}</h6>
+            <h6 className="footer-title text-lg font-serif tracking-[0.15em]">{siteName}</h6>
             <p className="text-sm opacity-80 leading-relaxed max-w-xs">
               {t("common.shopDesc")}
             </p>
@@ -72,7 +74,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="border-t border-neutral-content/20 py-6 w-full flex flex-col sm:flex-row items-center justify-between gap-4 px-4">
           <p className="text-xs opacity-60">
-            {t("footer.copyright", { year: new Date().getFullYear() })}
+            © {new Date().getFullYear()} {siteName}. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-4">

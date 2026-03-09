@@ -128,23 +128,23 @@ export default function AdminUsersPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">管理員管理</h1>
-        <button onClick={openAdd} className="btn btn-primary btn-sm gap-2">
-          <Plus size={16} /> 新增管理員
+        <button onClick={openAdd} className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium bg-[#0071e3] text-white hover:bg-[#0077ED] transition-colors cursor-pointer">
+          <Plus size={15} /> 新增管理員
         </button>
       </div>
 
-      <div className="card bg-base-100 shadow-sm">
-        <div className="card-body p-0">
+      <div className="bg-base-100 border border-base-200 rounded-2xl overflow-hidden">
+        <div className="p-0">
           <div className="overflow-x-auto">
             <table className="table">
               <thead>
                 <tr className="text-base-content/60 text-xs uppercase tracking-wider">
-                  <th>ID</th>
-                  <th>姓名</th>
-                  <th>Email</th>
-                  <th>角色</th>
-                  <th>建立時間</th>
-                  <th className="text-right">操作</th>
+                  <th className="text-center">ID</th>
+                  <th className="text-center">姓名</th>
+                  <th className="text-center">Email</th>
+                  <th className="text-center">角色</th>
+                  <th className="text-center">建立時間</th>
+                  <th className="text-center">操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -157,33 +157,35 @@ export default function AdminUsersPage() {
                 )}
                 {admins.map((admin) => (
                   <tr key={admin.id} className="hover:bg-base-200/50 transition-colors">
-                    <td className="font-mono text-sm">#{admin.id}</td>
-                    <td className="font-medium">{admin.name}</td>
-                    <td className="text-base-content/70">{admin.email}</td>
-                    <td>
-                      <span className="inline-block px-3 py-1.5 rounded-full text-xs font-medium bg-blue-50 text-blue-600">
+                    <td className="text-center font-mono text-sm">#{admin.id}</td>
+                    <td className="text-center font-medium">{admin.name}</td>
+                    <td className="text-center text-base-content/70">{admin.email}</td>
+                    <td className="text-center">
+                      <span className="inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-medium border border-blue-200 bg-blue-50 text-blue-600">
                         {admin.role}
                       </span>
                     </td>
-                    <td className="text-xs text-base-content/50">
+                    <td className="text-center text-xs text-base-content/50">
                       {new Date(admin.createdAt).toLocaleString("zh-TW")}
                     </td>
-                    <td className="text-right">
-                      <div className="flex items-center justify-end gap-1.5">
+                    <td className="text-center">
+                      <div className="flex items-center justify-center gap-1.5">
                         <button
                           onClick={() => openEdit(admin)}
-                          className="px-3 py-1.5 rounded-full text-xs font-medium bg-base-200 text-base-content/70 hover:bg-base-300 transition-colors"
+                          className="w-7 h-7 rounded-full inline-flex items-center justify-center border border-gray-300 text-base-content/60 hover:bg-gray-300 transition-colors cursor-pointer"
+                          title="編輯"
                         >
-                          編輯
+                          <Pencil size={14} />
                         </button>
                         <button
                           onClick={() => {
                             setDeletingId(admin.id);
                             setDeleteDialogOpen(true);
                           }}
-                          className="px-3 py-1.5 rounded-full text-xs font-medium bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
+                          className="w-7 h-7 rounded-full inline-flex items-center justify-center border border-error/30 text-error/60 hover:bg-error/10 transition-colors cursor-pointer"
+                          title="刪除"
                         >
-                          刪除
+                          <Trash2 size={14} />
                         </button>
                       </div>
                     </td>

@@ -8,10 +8,10 @@ import { ExternalLink, Copy, Check } from "lucide-react";
 import Link from "next/link";
 
 const statusConfig: Record<string, { label: string; bg: string; text: string }> = {
-  pending:  { label: "待驗證", bg: "bg-amber-50",  text: "text-amber-600" },
-  verified: { label: "已驗證", bg: "bg-emerald-50", text: "text-emerald-600" },
-  failed:   { label: "失敗",   bg: "bg-red-50",     text: "text-red-500" },
-  manual:   { label: "已確認", bg: "bg-blue-50",    text: "text-blue-600" },
+  pending:  { label: "待驗證", bg: "bg-amber-50 border-amber-200",  text: "text-amber-600" },
+  verified: { label: "已驗證", bg: "bg-emerald-50 border-emerald-200", text: "text-emerald-600" },
+  failed:   { label: "失敗",   bg: "bg-red-50 border-red-200",     text: "text-red-500" },
+  manual:   { label: "已確認", bg: "bg-blue-50 border-blue-200",    text: "text-blue-600" },
 };
 
 const allStatuses = ["all", "pending", "verified", "failed", "manual"] as const;
@@ -118,80 +118,78 @@ export default function AdminCryptoOrdersPage() {
       <h1 className="text-2xl font-bold">加密訂單</h1>
 
       {/* 篩選區域 */}
-      <div className="card bg-base-100 shadow-sm">
-        <div className="card-body">
-          <div className="flex flex-wrap items-end gap-3">
-            {/* 搜尋類型選擇 */}
-            <div className="min-w-[120px]">
-              <label className="text-xs text-base-content/60 mb-1 block">搜尋類型</label>
-              <select
-                value={searchType}
-                onChange={(e) => setSearchType(e.target.value as "orderNumber" | "txHash")}
-                className="select select-bordered w-full select-sm"
-              >
-                <option value="orderNumber">訂單編號</option>
-                <option value="txHash">TX Hash</option>
-              </select>
-            </div>
-
-            {/* 搜尋框 */}
-            <div className="flex-1 min-w-[200px]">
-              <label className="text-xs text-base-content/60 mb-1 block">
-                {searchType === "orderNumber" ? "訂單編號" : "TX Hash"}
-              </label>
-              <input
-                type="text"
-                placeholder={searchType === "orderNumber" ? "搜尋訂單編號..." : "搜尋 TX Hash..."}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                className="input input-bordered w-full input-sm"
-              />
-            </div>
-
-            {/* 開始日期 */}
-            <div className="min-w-[140px]">
-              <label className="text-xs text-base-content/60 mb-1 block">開始日期</label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="input input-bordered w-full input-sm"
-              />
-            </div>
-
-            {/* 結束日期 */}
-            <div className="min-w-[140px]">
-              <label className="text-xs text-base-content/60 mb-1 block">結束日期</label>
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="input input-bordered w-full input-sm"
-              />
-            </div>
-
-            {/* 每頁筆數 */}
-            <div className="min-w-[120px]">
-              <label className="text-xs text-base-content/60 mb-1 block">每頁筆數</label>
-              <select
-                value={pageSize}
-                onChange={(e) => handlePageSizeChange(Number(e.target.value))}
-                className="select select-bordered w-full select-sm"
-              >
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-                <option value={200}>200</option>
-              </select>
-            </div>
-
-            {/* 搜尋按鈕 */}
-            <button onClick={handleSearch} className="btn btn-primary btn-sm">
-              搜尋
-            </button>
+      <div className="bg-base-100 border border-base-200 rounded-2xl p-5">
+        <div className="flex flex-wrap items-end gap-3">
+          {/* 搜尋類型選擇 */}
+          <div className="min-w-[120px]">
+            <label className="text-xs text-base-content/60 mb-1 block">搜尋類型</label>
+            <select
+              value={searchType}
+              onChange={(e) => setSearchType(e.target.value as "orderNumber" | "txHash")}
+              className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors"
+            >
+              <option value="orderNumber">訂單編號</option>
+              <option value="txHash">TX Hash</option>
+            </select>
           </div>
+
+          {/* 搜尋框 */}
+          <div className="flex-1 min-w-[200px]">
+            <label className="text-xs text-base-content/60 mb-1 block">
+              {searchType === "orderNumber" ? "訂單編號" : "TX Hash"}
+            </label>
+            <input
+              type="text"
+              placeholder={searchType === "orderNumber" ? "搜尋訂單編號..." : "搜尋 TX Hash..."}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+              className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors"
+            />
+          </div>
+
+          {/* 開始日期 */}
+          <div className="min-w-[140px]">
+            <label className="text-xs text-base-content/60 mb-1 block">開始日期</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors"
+            />
+          </div>
+
+          {/* 結束日期 */}
+          <div className="min-w-[140px]">
+            <label className="text-xs text-base-content/60 mb-1 block">結束日期</label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors"
+            />
+          </div>
+
+          {/* 每頁筆數 */}
+          <div className="min-w-[120px]">
+            <label className="text-xs text-base-content/60 mb-1 block">每頁筆數</label>
+            <select
+              value={pageSize}
+              onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+              className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors"
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+              <option value={200}>200</option>
+            </select>
+          </div>
+
+          {/* 搜尋按鈕 */}
+          <button onClick={handleSearch} className="inline-flex items-center px-5 py-2 rounded-full text-sm font-medium bg-[#0071e3] text-white hover:bg-[#0077ED] transition-colors cursor-pointer">
+            搜尋
+          </button>
         </div>
       </div>
 
@@ -207,19 +205,19 @@ export default function AdminCryptoOrdersPage() {
         ))}
       </div>
 
-      <div className="card bg-base-100 shadow-sm">
-        <div className="card-body p-0">
+      <div className="bg-base-100 border border-base-200 rounded-2xl overflow-hidden">
+        <div className="p-0">
           <div className="overflow-x-auto">
             <table className="table">
               <thead>
                 <tr className="text-base-content/60 text-xs uppercase tracking-wider">
-                  <th>關聯訂單</th>
-                  <th>幣種</th>
-                  <th className="text-right">應付金額</th>
-                  <th>TX Hash</th>
+                  <th className="text-center">關聯訂單</th>
+                  <th className="text-center">幣種</th>
+                  <th className="text-center">應付金額</th>
+                  <th className="text-center">TX Hash</th>
                   <th className="text-center">狀態</th>
-                  <th>時間</th>
-                  <th className="text-right">操作</th>
+                  <th className="text-center">時間</th>
+                  <th className="text-center">操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -231,18 +229,18 @@ export default function AdminCryptoOrdersPage() {
                   const txUrl = getTxUrl(order);
                   return (
                     <tr key={order.id} className="hover:bg-base-200/50 transition-colors">
-                      <td className="font-mono text-sm">
+                      <td className="text-center font-mono text-sm">
                         <Link href={`/admin/orders?orderNumber=${order.orderNumber || ''}`}
                           className="text-primary hover:underline">
                           {order.orderNumber || `#${order.orderId}`}
                         </Link>
                       </td>
-                      <td>
+                      <td className="text-center">
                         <span className="font-medium">{order.symbol}</span>
                         <span className="text-xs text-base-content/40 ml-1">({order.network})</span>
                       </td>
-                      <td className="text-right tabular-nums font-medium">{order.expectedAmount}</td>
-                      <td className="font-mono text-xs">
+                      <td className="text-center tabular-nums font-medium">{order.expectedAmount}</td>
+                      <td className="text-center font-mono text-xs">
                         {order.txHash ? (
                           <span className="inline-flex items-center gap-1">
                             {txUrl ? (
@@ -267,30 +265,30 @@ export default function AdminCryptoOrdersPage() {
                         )}
                       </td>
                       <td className="text-center">
-                        <span className={`inline-block min-w-[72px] px-3 py-1.5 rounded-full text-xs font-medium ${status.bg} ${status.text}`}>
+                        <span className={`inline-flex items-center justify-center min-w-[72px] px-3 py-1 rounded-full text-xs font-medium border ${status.bg} ${status.text}`}>
                           {status.label}
                         </span>
                       </td>
-                      <td className="text-xs text-base-content/50">
+                      <td className="text-center text-xs text-base-content/50">
                         {order.createdAt ? new Date(order.createdAt).toLocaleString("zh-TW") : "—"}
                       </td>
-                      <td className="text-right">
-                        <div className="flex items-center justify-end gap-1.5">
+                      <td className="text-center">
+                        <div className="flex items-center justify-center gap-1.5">
                           {order.verifyStatus === "pending" && order.txHash && (
                             <button onClick={() => handleAction(order.id, "verify")}
-                              className="px-3 py-1.5 rounded-full text-xs font-medium bg-base-200 text-base-content/70 hover:bg-base-300 transition-colors">
+                              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border border-gray-300 text-base-content/70 hover:bg-gray-300 transition-colors cursor-pointer">
                               驗證
                             </button>
                           )}
                           {order.verifyStatus !== "verified" && (
                             <>
                               <button onClick={() => handleAction(order.id, "confirm")}
-                                className="px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors">
+                                className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border border-emerald-200 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors cursor-pointer">
                                 {order.verifyStatus === "failed" ? "重新確認" : "確認"}
                               </button>
                               {order.verifyStatus !== "failed" && (
                                 <button onClick={() => handleAction(order.id, "reject")}
-                                  className="px-3 py-1.5 rounded-full text-xs font-medium bg-red-50 text-red-500 hover:bg-red-100 transition-colors">
+                                  className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border border-red-200 bg-red-50 text-red-500 hover:bg-red-100 transition-colors cursor-pointer">
                                   拒絕
                                 </button>
                               )}
