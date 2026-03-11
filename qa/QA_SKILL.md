@@ -1,5 +1,8 @@
 # QA 測試 Skill — Leo Shop (CryptoShop)
 
+> **AI 測試人員請先讀本文件，再讀 `TEST_CASES.md` 取得所有測試案例。**
+> 測試完成後，複製 `reports/TEMPLATE.md` 產出報告，Bug 用 `bugs/TEMPLATE.md` 格式記錄。
+
 ## 專案概述
 
 這是一個支援加密貨幣支付的電商網站，前後端分離架構。
