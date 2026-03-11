@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
       { protocol: "http", hostname: "localhost" },
       { protocol: "http", hostname: "leo0928.synology.me" },
       { protocol: "https", hostname: "leo0928.synology.me" },
+      { protocol: "https", hostname: "cryptoshop-api.aligrich.com" },
+      { protocol: "http", hostname: "cryptoshop-api.aligrich.com" },
     ],
   },
 };
