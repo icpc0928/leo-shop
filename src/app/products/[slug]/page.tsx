@@ -146,7 +146,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                 <span className="text-lg text-base-content/40 line-through">
                   {formatPrice(product.comparePrice)}
                 </span>
-                <span className="text-xs bg-[#c8956c] text-white px-2 py-0.5 rounded-sm">
+                <span className="text-xs bg-[#c8956c] text-white px-2 py-0.5 rounded-full">
                   -{Math.round((1 - product.price / product.comparePrice) * 100)}%
                 </span>
               </>
@@ -155,19 +155,19 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
 
           <p className="text-muted leading-relaxed mb-8">{product.description}</p>
 
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex items-center gap-4 mb-8">
             <span className="text-sm text-muted">{t("quantity")}</span>
-            <div className="flex items-center border border-border">
+            <div className="flex items-center border border-base-200 rounded-full bg-gray-50">
               <button
-                className="p-2 hover:bg-gray-50 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-200 transition-colors"
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                 aria-label="Decrease quantity"
               >
                 <Minus className="w-4 h-4" aria-hidden="true" />
               </button>
-              <span className="w-12 text-center text-sm">{quantity}</span>
+              <span className="w-10 text-center text-sm font-medium">{quantity}</span>
               <button
-                className="p-2 hover:bg-gray-50 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-200 transition-colors"
                 onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
                 aria-label="Increase quantity"
               >
@@ -177,23 +177,28 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
             <span className="text-xs text-muted">{t("inStock", { count: product.stock })}</span>
           </div>
 
-          <Button size="lg" onClick={handleAddToCart} disabled={product.stock <= 0}>
-            <ShoppingBag className="w-5 h-5 mr-2" />
+          <button
+            onClick={handleAddToCart}
+            disabled={product.stock <= 0}
+            className="w-full py-4 rounded-full text-base font-semibold flex items-center justify-center gap-2 transition-opacity hover:opacity-90 disabled:opacity-50"
+            style={{ backgroundColor: 'var(--home2-primary, #c8956c)', color: '#fff' }}
+          >
+            <ShoppingBag className="w-5 h-5" />
             {product.stock <= 0 ? "已售完" : t("addToCart")}
-          </Button>
+          </button>
         </div>
       </div>
 
-      <div className="border-t border-border mt-8 py-12">
-        <div className="flex gap-8 border-b border-border mb-8">
+      <div className="border-t border-base-200 mt-8 py-12">
+        <div className="flex gap-2 mb-8">
           {tabs.map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`pb-3 text-sm tracking-wider transition-colors border-b-2 -mb-[1px] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+              className={`px-5 py-2 text-sm tracking-wider transition-colors rounded-full ${
                 activeTab === tab.key
-                  ? "border-primary text-foreground"
-                  : "border-transparent text-muted hover:text-foreground"
+                  ? "bg-gray-900 text-white"
+                  : "bg-gray-50 text-muted hover:bg-gray-100"
               }`}
             >
               {tab.label}
@@ -237,7 +242,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
           width: 36px;
           height: 36px;
           background: rgba(255,255,255,0.8);
-          border-radius: 0;
+          border-radius: 50%;
         }
         .product-swiper .swiper-button-next::after,
         .product-swiper .swiper-button-prev::after {
