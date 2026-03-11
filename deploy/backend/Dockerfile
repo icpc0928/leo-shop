@@ -5,7 +5,7 @@
 # ============================================
 
 # --- Build Stage ---
-FROM eclipse-temurin:25-jdk-alpine AS builder
+FROM amazoncorretto:25 AS builder
 
 WORKDIR /build
 
@@ -23,7 +23,7 @@ COPY leo-shop-api/src ./src
 RUN ./gradlew bootJar --no-daemon -x test
 
 # --- Runtime Stage ---
-FROM eclipse-temurin:25-jre-alpine
+FROM amazoncorretto:25-alpine
 
 LABEL maintainer="Leo"
 
