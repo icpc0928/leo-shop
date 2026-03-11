@@ -318,3 +318,43 @@ export const wishlistAPI = {
   toggle: (productId: number): Promise<{ success: boolean; wishlisted: boolean; message: string }> =>
     fetchAPI(`/api/wishlist/${productId}`, { method: 'POST' }),
 };
+
+// Banner API
+export const bannerAPI = {
+  getAll: () => fetchAdminAPI('/api/admin/banners'),
+  getPublic: () => fetchAPI('/api/banners'),
+  create: (data: Record<string, unknown>) => fetchAdminAPI('/api/admin/banners', { method: 'POST', body: JSON.stringify(data) }),
+  update: (id: number, data: Record<string, unknown>) => fetchAdminAPI(`/api/admin/banners/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  delete: (id: number) => fetchAdminAPI(`/api/admin/banners/${id}`, { method: 'DELETE' }),
+  toggle: (id: number) => fetchAdminAPI(`/api/admin/banners/${id}/toggle`, { method: 'PATCH' }),
+};
+
+// FAQ API
+export const faqAPI = {
+  getAll: () => fetchAdminAPI('/api/admin/faqs'),
+  getPublic: () => fetchAPI('/api/faqs'),
+  create: (data: Record<string, unknown>) => fetchAdminAPI('/api/admin/faqs', { method: 'POST', body: JSON.stringify(data) }),
+  update: (id: number, data: Record<string, unknown>) => fetchAdminAPI(`/api/admin/faqs/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  delete: (id: number) => fetchAdminAPI(`/api/admin/faqs/${id}`, { method: 'DELETE' }),
+  toggle: (id: number) => fetchAdminAPI(`/api/admin/faqs/${id}/toggle`, { method: 'PATCH' }),
+};
+
+// Page API
+export const pageAPI = {
+  getAll: () => fetchAdminAPI('/api/admin/pages'),
+  getPublic: (slug: string) => fetchAPI(`/api/pages/${slug}`),
+  create: (data: Record<string, unknown>) => fetchAdminAPI('/api/admin/pages', { method: 'POST', body: JSON.stringify(data) }),
+  update: (id: number, data: Record<string, unknown>) => fetchAdminAPI(`/api/admin/pages/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  delete: (id: number) => fetchAdminAPI(`/api/admin/pages/${id}`, { method: 'DELETE' }),
+  toggle: (id: number) => fetchAdminAPI(`/api/admin/pages/${id}/toggle`, { method: 'PATCH' }),
+};
+
+// TeamMember API
+export const teamAPI = {
+  getAll: () => fetchAdminAPI('/api/admin/team-members'),
+  getPublic: () => fetchAPI('/api/team-members'),
+  create: (data: Record<string, unknown>) => fetchAdminAPI('/api/admin/team-members', { method: 'POST', body: JSON.stringify(data) }),
+  update: (id: number, data: Record<string, unknown>) => fetchAdminAPI(`/api/admin/team-members/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  delete: (id: number) => fetchAdminAPI(`/api/admin/team-members/${id}`, { method: 'DELETE' }),
+  toggle: (id: number) => fetchAdminAPI(`/api/admin/team-members/${id}/toggle`, { method: 'PATCH' }),
+};

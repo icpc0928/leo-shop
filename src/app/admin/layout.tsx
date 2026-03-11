@@ -5,7 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import AdminAuthGuard from "@/components/admin/AdminAuthGuard";
 import { clearAdminSession } from "@/app/admin/login/page";
-import { LayoutDashboard, Package, ClipboardList, Users, LogOut, Store, Menu, Wallet, Bitcoin, Shield, Settings, Tags } from "lucide-react";
+import { LayoutDashboard, Package, ClipboardList, Users, LogOut, Store, Menu, Wallet, Bitcoin, Shield, Settings, Tags, Image as ImageIcon, HelpCircle, FileText, UsersRound } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useSiteInfo } from "@/contexts/SiteContext";
 
@@ -19,6 +19,12 @@ const navItems = [
   { label: "支付管理", href: "/admin/payment-methods", icon: Wallet },
   { label: "加密訂單", href: "/admin/crypto-orders", icon: Bitcoin },
   { label: "系統設定", href: "/admin/settings", icon: Settings },
+  { label: "divider", href: "", icon: Settings }, // 分隔線
+  { label: "內容管理", href: "", icon: Settings, isHeader: true }, // 分組標題
+  { label: "輪播管理", href: "/admin/banners", icon: ImageIcon },
+  { label: "FAQ管理", href: "/admin/faqs", icon: HelpCircle },
+  { label: "頁面管理", href: "/admin/pages", icon: FileText },
+  { label: "團隊管理", href: "/admin/team", icon: UsersRound },
 ];
 
 function Sidebar({ pathname }: { pathname: string }) {
@@ -29,9 +35,22 @@ function Sidebar({ pathname }: { pathname: string }) {
         <h1 className="text-xl font-bold tracking-wider">{siteName}</h1>
         <span className="text-xs opacity-60 uppercase tracking-widest">Admin Panel</span>
       </div>
-      <ul className="menu flex-1 p-4 gap-1">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href));
+      <ul className="menu flex-1 p-4 gap-1 overflow-y-auto">
+        {navItems.map((item, index) => {
+          // 分隔線
+          if (item.label === "divider") {
+            return <div key={`divider-${index}`} className="divider my-2"></div>;
+          }
+          // 分組標題
+          if (item.isHeader) {
+            return (
+              <li key={`header-${index}`} className="menu-title">
+                <span className="text-xs font-semibold opacity-70">{item.label}</span>
+              </li>
+            );
+          }
+          // 一般導航項目
+          const isActive = pathname === item.href || (item.href !== "/admin" && item.href && pathname.startsWith(item.href));
           const Icon = item.icon;
           return (
             <li key={item.href}>
