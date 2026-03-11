@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "http", hostname: "localhost" },
       { protocol: "http", hostname: "leo0928.synology.me" },
+      { protocol: "https", hostname: "leo0928.synology.me" },
     ],
   },
 };

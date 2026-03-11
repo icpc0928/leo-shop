@@ -179,13 +179,17 @@ export default function AdminBanners() {
                   {banners.map((banner) => (
                     <tr key={banner.id}>
                       <td className="text-center">
-                        <Image
-                          src={resolveImageUrl(banner.imageUrl)}
-                          alt={banner.title}
-                          width={50}
-                          height={50}
-                          className="rounded object-cover mx-auto"
-                        />
+                        {banner.imageUrl ? (
+                          <Image
+                            src={resolveImageUrl(banner.imageUrl)}
+                            alt={banner.title}
+                            width={50}
+                            height={50}
+                            className="rounded object-cover mx-auto"
+                          />
+                        ) : (
+                          <div className="w-[50px] h-[50px] rounded bg-gray-100 mx-auto flex items-center justify-center text-xs text-gray-400">無圖</div>
+                        )}
                       </td>
                       <td className="text-center font-medium">{banner.title}</td>
                       <td className="text-center text-base-content/50">{banner.subtitle || "-"}</td>
