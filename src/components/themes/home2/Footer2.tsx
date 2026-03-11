@@ -9,24 +9,21 @@ import "./theme.css";
 
 const aboutLinks = [
   { href: "/about", key: "aboutUs" },
-  { href: "/story", key: "ourStory" },
-  { href: "/careers", key: "careers" },
-  { href: "/sustainability", key: "sustainability" },
+  { href: "/pages/story", key: "ourStory" },
+  { href: "/contact", key: "contactUs" },
 ];
 
 const quickLinks = [
   { href: "/products", key: "products" },
-  { href: "/collections", key: "collections" },
-  { href: "/new-arrivals", key: "newArrivals" },
-  { href: "/sale", key: "sale" },
+  { href: "/products?sort=newest", key: "newArrivals" },
+  { href: "/faq", key: "faq" },
 ];
 
 const serviceLinks = [
-  { href: "/faq", key: "faq" },
-  { href: "/shipping", key: "shipping" },
-  { href: "/returns", key: "returns" },
-  { href: "/privacy", key: "privacy" },
-  { href: "/terms", key: "terms" },
+  { href: "/pages/shipping", key: "shipping" },
+  { href: "/pages/returns", key: "returns" },
+  { href: "/pages/privacy", key: "privacy" },
+  { href: "/pages/terms", key: "terms" },
 ];
 
 export default function Footer2() {
