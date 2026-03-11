@@ -1,8 +1,10 @@
 # ============================================
-# Leo Shop Frontend - Next.js
+# Leo Shop Frontend - Multi-stage Build
+# Stage 1: 安裝依賴 + 建構
+# Stage 2: 只保留執行必要檔案
 # ============================================
 
-# Stage 1: 安裝依賴 + 建構
+# --- Build Stage ---
 FROM node:20-alpine AS builder
 
 WORKDIR /app
@@ -11,18 +13,16 @@ WORKDIR /app
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 
-# 安裝依賴
+# 安裝依賴（利用 Docker cache）
 COPY leo-shop/package.json leo-shop/package-lock.json* ./
 RUN npm ci
 
-# 複製原始碼
+# 複製原始碼並建構
 COPY leo-shop/ .
-
-# 建構（需要足夠記憶體）
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 
-# Stage 2: 只保留執行必要檔案
+# --- Runtime Stage ---
 FROM node:20-alpine AS runner
 
 WORKDIR /app
