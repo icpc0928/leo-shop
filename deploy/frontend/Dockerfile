@@ -15,7 +15,7 @@ ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 
 # 安裝依賴（利用 Docker cache）
 COPY git/leo-shop/package.json git/leo-shop/package-lock.json* ./
-RUN npm ci
+RUN npm install
 
 # 複製原始碼並建構
 COPY git/leo-shop/ .
