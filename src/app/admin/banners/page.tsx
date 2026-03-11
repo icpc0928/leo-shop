@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { bannerAPI } from "@/lib/api";
+import ImageUploader from "@/components/admin/ImageUploader";
+import { resolveImageUrl } from "@/lib/mappers";
 
 type Banner = {
   id: number;
@@ -178,7 +180,7 @@ export default function AdminBanners() {
                     <tr key={banner.id}>
                       <td className="text-center">
                         <Image
-                          src={banner.imageUrl}
+                          src={resolveImageUrl(banner.imageUrl)}
                           alt={banner.title}
                           width={50}
                           height={50}
@@ -279,11 +281,11 @@ export default function AdminBanners() {
               </div>
             </div>
             <div>
-              <label className="text-xs text-base-content/60 mb-1 block">圖片 URL</label>
-              <input
-                className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors"
-                value={form.imageUrl}
-                onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+              <label className="text-xs text-base-content/60 mb-1 block">圖片</label>
+              <ImageUploader
+                existingImages={form.imageUrl ? [form.imageUrl] : []}
+                onChange={(urls) => setForm({ ...form, imageUrl: urls[0] || "" })}
+                maxImages={1}
               />
             </div>
             <div className="grid grid-cols-2 gap-4">

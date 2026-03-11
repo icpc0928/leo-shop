@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { teamAPI } from "@/lib/api";
+import ImageUploader from "@/components/admin/ImageUploader";
+import { resolveImageUrl } from "@/lib/mappers";
 
 type TeamMember = {
   id: number;
@@ -131,7 +133,7 @@ export default function AdminTeam() {
                     <tr key={member.id}>
                       <td className="text-center">
                         {member.imageUrl ? (
-                          <Image src={member.imageUrl} alt={member.name} width={40} height={40} className="rounded-full object-cover mx-auto" />
+                          <Image src={resolveImageUrl(member.imageUrl)} alt={member.name} width={40} height={40} className="rounded-full object-cover mx-auto" />
                         ) : (
                           <div className="w-10 h-10 rounded-full bg-gray-200 mx-auto flex items-center justify-center text-sm text-gray-500">{member.name[0]}</div>
                         )}
@@ -173,8 +175,12 @@ export default function AdminTeam() {
               <input className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} />
             </div>
             <div>
-              <label className="text-xs text-base-content/60 mb-1 block">頭像 URL</label>
-              <input className="w-full px-3 py-2 border border-base-200 rounded-xl bg-base-100 text-sm outline-none focus:border-gray-400 transition-colors" value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} />
+              <label className="text-xs text-base-content/60 mb-1 block">頭像</label>
+              <ImageUploader
+                existingImages={form.imageUrl ? [form.imageUrl] : []}
+                onChange={(urls) => setForm({ ...form, imageUrl: urls[0] || "" })}
+                maxImages={1}
+              />
             </div>
             <div>
               <label className="text-xs text-base-content/60 mb-1 block">排序</label>
