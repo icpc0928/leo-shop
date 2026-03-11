@@ -2,22 +2,26 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { bannerAPI } from '@/lib/api';
+import { resolveImageUrl } from '@/lib/mappers';
 
 interface Slide {
   id: number;
   title: string;
   subtitle: string;
-  cta: string;
+  ctaText: string;
+  ctaLink: string;
   bgColor: string;
   imageUrl: string;
 }
 
-const slides: Slide[] = [
+const fallbackSlides: Slide[] = [
   {
     id: 1,
     title: 'Handcrafted Elegance',
     subtitle: 'Discover unique pieces that tell a story',
-    cta: '立即選購',
+    ctaText: '立即選購',
+    ctaLink: '/products',
     bgColor: '#EEE5DD',
     imageUrl: 'https://picsum.photos/600/600?random=1',
   },
@@ -25,7 +29,8 @@ const slides: Slide[] = [
     id: 2,
     title: 'Artisan Collection',
     subtitle: 'Curated designs for your home',
-    cta: '立即選購',
+    ctaText: '立即選購',
+    ctaLink: '/products',
     bgColor: '#F5F1F1',
     imageUrl: 'https://picsum.photos/600/600?random=2',
   },
@@ -33,22 +38,40 @@ const slides: Slide[] = [
     id: 3,
     title: 'Timeless Beauty',
     subtitle: 'Quality craftsmanship meets modern design',
-    cta: '立即選購',
+    ctaText: '立即選購',
+    ctaLink: '/products',
     bgColor: '#F1DED0',
     imageUrl: 'https://picsum.photos/600/600?random=3',
   },
 ];
 
 export default function SliderTwo() {
+  const [slides, setSlides] = useState<Slide[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
+    bannerAPI.getPublic()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setSlides(data);
+        } else {
+          setSlides(fallbackSlides);
+        }
+      })
+      .catch(() => {
+        setSlides(fallbackSlides);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (slides.length === 0) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
-
     return () => clearInterval(timer);
-  }, []);
+  }, [slides.length]);
+
+  if (slides.length === 0) return null;
 
   return (
     <section className="relative overflow-hidden">
@@ -59,7 +82,7 @@ export default function SliderTwo() {
             className={`absolute inset-0 transition-opacity duration-1000 ${
               index === currentSlide ? 'opacity-100' : 'opacity-0'
             }`}
-            style={{ backgroundColor: slide.bgColor }}
+            style={{ backgroundColor: slide.bgColor || '#f5f5f7' }}
           >
             <div className="container mx-auto px-4 h-full">
               <div className="grid md:grid-cols-2 gap-8 items-center h-full">
@@ -75,10 +98,10 @@ export default function SliderTwo() {
                     {slide.subtitle}
                   </p>
                   <Link
-                    href="/products"
+                    href={slide.ctaLink || '/products'}
                     className="inline-block bg-[var(--home2-primary)] text-white px-8 py-3 rounded-full hover:opacity-90 transition-opacity"
                   >
-                    {slide.cta}
+                    {slide.ctaText || '立即選購'}
                   </Link>
                 </div>
 
@@ -86,7 +109,7 @@ export default function SliderTwo() {
                 <div className="relative h-full flex items-center justify-center">
                   <div className="relative w-full max-w-md aspect-square">
                     <img
-                      src={slide.imageUrl}
+                      src={slide.imageUrl ? resolveImageUrl(slide.imageUrl) : 'https://picsum.photos/600/600?random=1'}
                       alt={slide.title}
                       className="w-full h-full object-cover rounded-2xl shadow-2xl"
                     />
