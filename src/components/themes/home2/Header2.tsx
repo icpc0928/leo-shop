@@ -128,7 +128,7 @@ export default function Header2() {
                       <button
                         className={`${locale === lang.code ? "bg-base-200 font-medium" : ""}`}
                         onClick={() => {
-                          setLocale(lang.code);
+                          setLocale(lang.code as "zh-TW" | "en");
                           (document.activeElement as HTMLElement)?.blur();
                         }}
                       >
