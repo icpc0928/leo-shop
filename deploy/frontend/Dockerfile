@@ -1,0 +1,44 @@
+# ============================================
+# Leo Shop Frontend - Next.js
+# ============================================
+
+# Stage 1: 安裝依賴 + 建構
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# 接收 build-time 環境變數
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+
+# 安裝依賴
+COPY leo-shop/package.json leo-shop/package-lock.json* ./
+RUN npm ci
+
+# 複製原始碼
+COPY leo-shop/ .
+
+# 建構（需要足夠記憶體）
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+RUN npm run build
+
+# Stage 2: 只保留執行必要檔案
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+
+# 設定時區
+RUN apk add --no-cache tzdata && \
+    cp /usr/share/zoneinfo/Asia/Taipei /etc/localtime && \
+    echo "Asia/Taipei" > /etc/timezone
+
+ENV NODE_ENV=production
+
+# 複製必要檔案
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+EXPOSE 3000
+
+CMD ["node", "server.js"]

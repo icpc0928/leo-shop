@@ -1,0 +1,72 @@
+version: "3.9"
+
+services:
+  # ============ PostgreSQL ============
+  db:
+    image: postgres:17-alpine
+    container_name: leoshop-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "127.0.0.1:5432:5432"   # 只綁 localhost，外部無法直連
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ============ Backend (Spring Boot) ============
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: leoshop-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # DB
+      SPRING_DATASOURCE_URL: ${DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      # JPA
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      # JWT
+      APP_JWT_SECRET: ${JWT_SECRET}
+      APP_JWT_EXPIRATION: ${JWT_EXPIRATION}
+      # Etherscan
+      ETHERSCAN_API_KEY: ${ETHERSCAN_API_KEY}
+      # NOWPayments
+      NOWPAYMENTS_API_KEY: ${NOWPAYMENTS_API_KEY}
+      NOWPAYMENTS_IPN_SECRET: ${NOWPAYMENTS_IPN_SECRET}
+      # Crypto
+      CRYPTO_RATE_REFRESH_INTERVAL: ${CRYPTO_RATE_REFRESH}
+      # CORS
+      APP_CORS_ORIGINS: ${APP_CORS_ORIGINS}
+      # Java 記憶體
+      JAVA_OPTS: "-Xms256m -Xmx512m"
+    volumes:
+      - ./uploads:/app/uploads    # 商品圖片持久化
+    ports:
+      - "8080:8080"
+
+  # ============ Frontend (Next.js) ============
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+    container_name: leoshop-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
