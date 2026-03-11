@@ -17,10 +17,23 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
 });
 
-export const metadata: Metadata = {
-  title: "Leo Shop | Curated Living",
-  description: "精選生活好物，簡約設計，品味生活。",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+    const res = await fetch(`${apiUrl}/api/site-info`, { next: { revalidate: 60 } });
+    if (res.ok) {
+      const data = await res.json();
+      return {
+        title: data.siteName || "CryptoShop",
+        description: "精選生活好物，簡約設計，品味生活。",
+      };
+    }
+  } catch {}
+  return {
+    title: "CryptoShop",
+    description: "精選生活好物，簡約設計，品味生活。",
+  };
+}
 
 export default function RootLayout({
   children,
