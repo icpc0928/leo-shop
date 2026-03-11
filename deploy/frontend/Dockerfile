@@ -14,11 +14,11 @@ ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 
 # 安裝依賴（利用 Docker cache）
-COPY frontend/leo-shop/package.json frontend/leo-shop/package-lock.json* ./
+COPY git/leo-shop/package.json git/leo-shop/package-lock.json* ./
 RUN npm ci
 
 # 複製原始碼並建構
-COPY frontend/leo-shop/ .
+COPY git/leo-shop/ .
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 

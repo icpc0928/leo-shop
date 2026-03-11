@@ -9,17 +9,20 @@ FROM amazoncorretto:25 AS builder
 
 WORKDIR /build
 
+# 安裝編譯需要的工具
+RUN yum install -y findutils && yum clean all
+
 # 複製 Gradle 設定（利用 Docker cache）
-COPY leo-shop-api/build.gradle leo-shop-api/settings.gradle ./
-COPY leo-shop-api/gradle ./gradle
-COPY leo-shop-api/gradlew ./
+COPY git/leo-shop-api/build.gradle git/leo-shop-api/settings.gradle ./
+COPY git/leo-shop-api/gradle ./gradle
+COPY git/leo-shop-api/gradlew ./
 RUN chmod +x gradlew
 
 # 先下載依賴（cache layer）
 RUN ./gradlew dependencies --no-daemon || true
 
 # 複製原始碼並編譯
-COPY leo-shop-api/src ./src
+COPY git/leo-shop-api/src ./src
 RUN ./gradlew bootJar --no-daemon -x test
 
 # --- Runtime Stage ---
