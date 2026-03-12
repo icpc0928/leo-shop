@@ -14,22 +14,28 @@
 執行以下指令，了解這段期間改了什麼：
 
 ```bash
-# 比對最近一次 QA 更新後的所有變更（替換 commit hash）
-# 後端
-cd ~/IdeaProjects/leo-shop-api
-git log --oneline {上次QA的commit}..HEAD
-git diff {上次QA的commit}..HEAD --stat
-git diff {上次QA的commit}..HEAD -- src/main/java/com/leoshop/controller/  # 新增/修改的 API
-git diff {上次QA的commit}..HEAD -- src/main/java/com/leoshop/model/        # 新增/修改的 Entity
-git diff {上次QA的commit}..HEAD -- src/main/java/com/leoshop/dto/          # 新增/修改的 DTO
-git diff {上次QA的commit}..HEAD -- src/main/java/com/leoshop/config/SecurityConfig.java  # 權限變更
+# 自動偵測專案類型並比對變更
+# {LAST_COMMIT} = 上次 QA 更新的 commit hash（見本文件底部紀錄）
 
-# 前端
-cd ~/WebstormProjects/leo-shop
-git log --oneline {上次QA的commit}..HEAD
-git diff {上次QA的commit}..HEAD --stat
-git diff {上次QA的commit}..HEAD -- src/app/           # 新增/修改的頁面
-git diff {上次QA的commit}..HEAD -- src/lib/api.ts      # 新增/修改的 API 串接
+# 如果是後端（Java/Spring Boot）
+git log --oneline {LAST_COMMIT}..HEAD
+git diff {LAST_COMMIT}..HEAD --stat
+git diff {LAST_COMMIT}..HEAD -- '**/controller/'    # API 變更
+git diff {LAST_COMMIT}..HEAD -- '**/model/'         # Entity 變更
+git diff {LAST_COMMIT}..HEAD -- '**/dto/'            # DTO 變更
+git diff {LAST_COMMIT}..HEAD -- '**/SecurityConfig*' # 權限變更
+
+# 如果是前端（Next.js/React）
+git log --oneline {LAST_COMMIT}..HEAD
+git diff {LAST_COMMIT}..HEAD --stat
+git diff {LAST_COMMIT}..HEAD -- 'src/app/'           # 頁面變更
+git diff {LAST_COMMIT}..HEAD -- 'src/lib/'           # API 串接變更
+git diff {LAST_COMMIT}..HEAD -- 'src/components/'    # 元件變更
+
+# 如果是其他框架，自行調整路徑：
+# Node/Express: routes/, controllers/, models/
+# Python/Django: views.py, urls.py, models.py, serializers.py
+# Go: handlers/, routes/, models/
 ```
 
 ### Step 2：識別變更類型
